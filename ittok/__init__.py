@@ -26,7 +26,7 @@ def kotti_configure(settings):
     settings['pyramid.includes'] += ' ittok'
     settings['kotti.alembic_dirs'] += ' ittok:alembic'
     settings['kotti.available_types'] += ' ittok.resources.CustomContent'
-    settings['kotti.fanstatic.view_needed'] += ' ittok.fanstatic.css_and_js'
+    #settings['kotti.fanstatic.view_needed'] = ' ittok.fanstatic.css_and_js'
     File.type_info.addable_to.append('CustomContent')
 
 
@@ -42,3 +42,4 @@ def includeme(config):
     config.add_static_view('static-ittok', 'ittok:static')
 
     config.scan(__name__)
+    

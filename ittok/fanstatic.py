@@ -16,8 +16,8 @@ library = Library("ittok", "static")
 
 css = Resource(
     library,
-    "styles.css",
-    minified="styles.min.css")
+    "bootstrap-custom-BlanchedAlmond.css",
+    )
 js = Resource(
     library,
     "scripts.js",

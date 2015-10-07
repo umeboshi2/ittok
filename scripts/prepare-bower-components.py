@@ -85,19 +85,11 @@ def handle_fontawesome(pathspec):
         handle_file(os.path.join(fontpath, font))
     
         
-def handle_ace_editororig(components):
-    basedir = os.path.join(components, 'ace-builds/src')
-    print "Handling ace"
-    for basename in os.listdir(basedir):
-        pathspec = os.path.join(basedir, basename)
-        handle_file(pathspec)
-        
-
 def handle_ace_editor(components):
     libdir = os.path.join(COMPONENT_PATH, 'ace/lib')
-    print "LIBDIR", libdir
+    #print "LIBDIR", libdir
     components_dir = os.path.join(components, 'ace')
-    print "DEPLOY", components_dir
+    #print "DEPLOY", components_dir
     if not os.path.isdir(components_dir):
         os.makedirs(components_dir)
     cmd = ['cp', '-a', libdir, components_dir]
@@ -106,11 +98,12 @@ def handle_ace_editor(components):
 
 def handle_ace_builds(components):
     libdir = os.path.join(COMPONENT_PATH, 'ace-builds/src-min')
-    print "LIBDIR", libdir
+    #print "LIBDIR", libdir
     components_dir = os.path.join(components, 'ace-builds')
-    print "DEPLOY", components_dir
+    #print "DEPLOY", components_dir
     if not os.path.isdir(components_dir):
         os.makedirs(components_dir)
+    print "FIXME", "I'm always copying"
     cmd = ['cp', '-a', libdir, components_dir]
     subprocess.check_call(cmd)
     
@@ -207,7 +200,7 @@ def handle_item(name, pathspec):
         handle_generic_component(name, pathspec)
 
 def handle_isotope_pkgd():
-    dest = 'components/isotope/isotope.pkgd.js'
+    dest = os.path.join(DEST_PATH, 'isotope/isotope.pkgd.js')
     if not os.path.isfile(dest):
         src = 'bower_components/isotope/dist/isotope.pkgd.js'
         cmd = ['cp', '-a', src, dest]
@@ -228,6 +221,8 @@ def handle_isotope_layout():
             subprocess.check_call(cmd)
             print "Copied", destname
 
+
+# FIXME: this needs to be scss in sass/ directory            
 def copy_css():
     fileinput = 'bootstrap-fileinput/css/fileinput.min.css'
     filename = os.path.join(DEST_PATH, fileinput)
@@ -241,9 +236,19 @@ def copy_css():
             print "Copied %s" % destname
             
         
-
-
-
+def copy_bootstrap_fonts():
+    srcdir = 'bower_components/bootstrap/fonts'
+    destdir = 'ittok/static/fonts/bootstrap'
+    if not os.path.isdir(destdir):
+        os.makedirs(destdir)
+    if os.path.isdir(srcdir):
+        for basename in os.listdir(srcdir):
+            destname = os.path.join(destdir, basename)
+            if not os.path.isfile(destname):
+                cmd = ['cp', '-a', os.path.join(srcdir, basename), destname]
+                subprocess.check_call(cmd)
+                print "Copied %s" % destname
+                
 if __name__ == '__main__':
     paths = get_paths()
     for name, pathspec in paths.items():
@@ -262,3 +267,5 @@ if __name__ == '__main__':
     #handle_isotope_layout()
     if os.path.isdir('stylesheets'):
         copy_css()
+    copy_bootstrap_fonts()
+    

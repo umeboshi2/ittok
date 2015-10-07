@@ -14,10 +14,21 @@ from fanstatic import Resource
 
 library = Library("ittok", "static")
 
-css = Resource(
+fontawesome = Resource(
+    library,
+    'font-awesome.css',
+    )
+bootstrap_custom = Resource(
     library,
     "bootstrap-custom-BlanchedAlmond.css",
+    depends=[fontawesome],
     )
+fullcalendar = Resource(
+    library,
+    'fullcalendar.css',
+    )
+css = Group([fontawesome, bootstrap_custom, fullcalendar])
+
 js = Resource(
     library,
     "scripts.js",

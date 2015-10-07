@@ -19,14 +19,27 @@
   ],
   "dependencies": {
     "TableDnD": "https://github.com/isocra/TableDnD.git#~0.9.1",
+    "ace-builds": "~1.2.0",
     "angular": "~1.4.7",
+    "backbone.marionette": "marionette#~2.4.3",
+    "backbone.paginator": "~2.0.2",
+    "backbone.validation": "~0.7.1",
     "bootstrap": "~3.3.5",
+    "bootstrap-fileinput": "~4.2.7",
     "font-awesome": "fontawesome#~4.4.0",
     "fullcalendar": "~2.4.0",
+    "hallo": "~1.1.1",
     "html5shiv": "~3.7.3",
     "jquery": "~2.1.4",
     "jquery-form": "~3.46.0",
     "jquery-ui": "~1.11.4",
-    "tag-it": "*"
+    "requirejs": "~2.1.20",
+    "tag-it": "*",
+    "teacup": "~1.2.0"
+  },
+  "resolutions": {
+    "font-awesome": "~4.4.0",
+    "jquery-ui": "~1.11.4",
+    "jquery": "~2.1.4"
   }
 }

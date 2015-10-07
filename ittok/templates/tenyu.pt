@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      tal:define="page_slots api.slots;
+                  dummy api.view_needed"
+      metal:define-macro="main">
+
+  <head>
+    <meta charset="utf-8" />
+    <title metal:define-slot="page-title">${api.page_title | api.site_title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="${context.description | ''}" />
+
+    <more tal:omit-tag="" metal:define-slot="head-more"></more>
+
+    <!-- 'inhead' slots: support third party injection of things that
+         go into the head -->
+    <tal:slots tal:define="snippets page_slots.inhead"
+               tal:condition="snippets"
+               tal:repeat="snippet snippets"
+               tal:replace="structure snippet" />
+    <script>
+      kotti_context_url = '${request.resource_url(context)}';
+    </script>
+    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.css.gz"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-custom-BlanchedAlmond.css.gz"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/fileinput.css.gz"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/jqueryui-BlanchedAlmond.css.gz"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/fullcalendar.css.gz"/>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/screen-BlanchedAlmond.css.gz"/>
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>-->
+  </head>
+
+  <body class="${request.user is not None and 'logged-in'}
+               view-${request.view_name or 'default'}
+               ${api.body_css_class}">
+  </body>
+</html>

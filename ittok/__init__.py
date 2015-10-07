@@ -23,7 +23,7 @@ def kotti_configure(settings):
     :type settings: dict
     """
 
-    settings['pyramid.includes'] += ' ittok'
+    settings['pyramid.includes'] += ' ittok pyramid_mako'
     settings['kotti.alembic_dirs'] += ' ittok:alembic'
     settings['kotti.available_types'] += ' ittok.resources.CustomContent'
     #settings['kotti.fanstatic.view_needed'] = ' ittok.fanstatic.css_and_js'
@@ -40,6 +40,8 @@ def includeme(config):
 
     config.add_translation_dirs('ittok:locale')
     config.add_static_view('static-ittok', 'ittok:static')
-
+    config.add_view(
+        name='tenyu',
+        renderer='ittok:templates/tenyu.pt')
     config.scan(__name__)
     

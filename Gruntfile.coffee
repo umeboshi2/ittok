@@ -4,9 +4,8 @@ module.exports = (grunt) ->
   # variables to use in config
   # foo = 'bar'
   _ = require 'lodash'
-  app_dir = 'javascripts'
-  # can js and css be split in kotti?
   static_dir = 'ittok/static'
+  app_dir = 'ittok/static/apps'
   # config
   grunt.initConfig
     coffee:
@@ -18,7 +17,7 @@ module.exports = (grunt) ->
         dest: app_dir
         ext: '.js'
         cwd: 'coffee'
-                
+
       compileWithMaps:
         options:
           bare: false
@@ -60,8 +59,9 @@ module.exports = (grunt) ->
         options:
           spawn: false
       compass:
-        files: ['sass/**/*.scss']
-        tasks: ['compass:watch', 'compress']
+        files: ['sass/**/*.scss', 'config.rb']
+        #tasks: ['compass:watch', 'compress']
+        tasks: ['compass:watch']
         
     concurrent:
       watchers:
@@ -105,7 +105,7 @@ module.exports = (grunt) ->
       'shell:bower'
       'coffee:compile'
       'compass:compile'
-      'compress'
+      #'compress'
       'coffee:compileWithMaps'
       ]
 
@@ -113,7 +113,7 @@ module.exports = (grunt) ->
       'shell:bower'
       'coffee:compile'
       'compass:compile'
-      'compress'
+      #'compress'
       'coffee:compileWithMaps'
       'concurrent:watchers'
       ]

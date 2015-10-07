@@ -23,14 +23,6 @@
     <script>
       kotti_context_url = '${request.resource_url(context)}';
     </script>
-    <!--<link rel="stylesheet" type="text/css" href="/stylesheets/font-awesome.css.gz"/>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-custom-BlanchedAlmond.css.gz"/>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/fileinput.css.gz"/>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/jqueryui-BlanchedAlmond.css.gz"/>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/fullcalendar.css.gz"/>
-    <link rel="stylesheet" type="text/css" href="/stylesheets/screen-BlanchedAlmond.css.gz"/>
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>-->
   </head>
 
   <body class="${request.user is not None and 'logged-in'}

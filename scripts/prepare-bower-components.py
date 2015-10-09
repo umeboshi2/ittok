@@ -32,7 +32,10 @@ IGNORED = IGNORED_NEEDED + IGNORED_TESTING + IGNORED_NOT_NEEDED
 #    'bower_components/outlayer/item.js',
 #    'bower_components/backbone.validation/dist/backbone-validation-amd.js',
 #    ]
-SPECIAL_PATHS = list()
+SPECIAL_PATHS = [
+    'bower_components/backbone.validation/dist/backbone-validation-amd.js',
+]
+
 
 
 # TODO
@@ -222,6 +225,16 @@ def handle_isotope_layout():
             print "Copied", destname
 
 
+def handle_outlayer_itemjs():
+    itemjs = 'outlayer/item.js'
+    dest = os.path.join(DEST_PATH, itemjs)
+    if not os.path.isfile(dest):
+        src = os.path.join(COMPONENT_PATH, itemjs)
+        if os.path.isfile(src):
+            cmd = ['cp', '-a', src, dest]
+            subprocess.check_call(cmd)
+            print "Copied", dest
+            
 # FIXME: this needs to be scss in sass/ directory            
 def copy_css():
     fileinput = 'bootstrap-fileinput/css/fileinput.min.css'
@@ -268,4 +281,6 @@ if __name__ == '__main__':
     if os.path.isdir('stylesheets'):
         copy_css()
     copy_bootstrap_fonts()
+    handle_outlayer_itemjs()
+    
     

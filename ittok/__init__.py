@@ -42,6 +42,6 @@ def includeme(config):
     config.add_static_view('static-ittok', 'ittok:static')
     config.add_view(
         name='tenyu',
-        renderer='ittok:templates/tenyu.pt')
+        renderer='ittok:templates/tenyu.mako')
     config.scan(__name__)
     

@@ -40,5 +40,5 @@ main_js = Resource(
     depends=[requirejs],
     )
 
-#js = Group([requirejs])
-css_and_js = Group([css])
+js = Group([requirejs, main_js])
+css_and_js = Group([css, js])

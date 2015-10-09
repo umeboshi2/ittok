@@ -28,5 +28,9 @@ def populate():
     tenyu.default_view = 'tenyu'
     root['tenyu'] = tenyu
 
+    ittok = root.get('ittok', Document())
+    ittok.title = 'ittok'
+    root['ittok'] = ittok
+    
     
     

@@ -17,7 +17,10 @@ version = '0.1dev'
 
 install_requires = [
     'Kotti>=1.0.0',
+    'kotti_calendar',
     'kotti_tinymce',
+    'kotti_settings',
+    'kotti_blog',
 ]
 
 

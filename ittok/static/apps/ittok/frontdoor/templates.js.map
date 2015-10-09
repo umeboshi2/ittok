@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "templates.js",
+  "sourceRoot": "../../../../../coffee/ittok/frontdoor/",
+  "sources": [
+    "templates.coffee"
+  ],
+  "names": [],
+  "mappings": "AACA;EAAA,MAAA,CAAO,SAAC,OAAD,EAAU,OAAV,EAAmB,MAAnB;AACL,QAAA;IAAA,EAAA,GAAK,OAAA,CAAQ,QAAR;IACL,MAAA,GAAS,OAAA,CAAQ,QAAR;IAST,cAAA,GAAiB,EAAE,CAAC,UAAH,CAAc,SAAC,IAAD;aAC7B,EAAE,CAAC,GAAH,CAAO,MAAA,CAAO,IAAI,CAAC,OAAZ,CAAP;IAD6B,CAAd;WAGjB,MAAM,CAAC,OAAP,GACE;MAAA,cAAA,EAAgB,cAAhB;;EAfG,CAAP;AAAA"
+}

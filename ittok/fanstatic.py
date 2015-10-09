@@ -29,9 +29,16 @@ fullcalendar = Resource(
     )
 css = Group([fontawesome, bootstrap_custom, fullcalendar])
 
-js = Resource(
+requirejs = Resource(
     library,
-    "scripts.js",
-    minified="scripts.min.js")
+    'components/requirejs/require.js',
+    )
 
-css_and_js = Group([css, js])
+main_js = Resource(
+    library,
+    'apps/ittok/main-local.js',
+    depends=[requirejs],
+    )
+
+#js = Group([requirejs])
+css_and_js = Group([css])

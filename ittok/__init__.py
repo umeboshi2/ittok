@@ -43,5 +43,6 @@ def includeme(config):
     config.add_view(
         name='tenyu',
         renderer='ittok:templates/tenyu.mako')
+    config.include('ittok.rest')
     config.scan(__name__)
     

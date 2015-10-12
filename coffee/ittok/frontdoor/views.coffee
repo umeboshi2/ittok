@@ -11,8 +11,5 @@ define (require, exports, module) ->
   class FrontDoorMainView extends Backbone.Marionette.ItemView
     template: FDTemplates.frontdoor_main
 
-  class SideBarView extends BaseSideBarView
-    
   module.exports =
     FrontDoorMainView: FrontDoorMainView
-    SideBarView: SideBarView

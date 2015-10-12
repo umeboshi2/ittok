@@ -12,10 +12,17 @@ define (require, exports, module) ->
   # Models
   ########################################
 
+  class BaseKottiModel extends Backbone.Model
+    url: ->
+      "#{@id}/@@json"
+      
   class AppSettings extends Backbone.Model
     id: 'ittok'
 
-  #class AppModel = 'foo'
+  class KottiRootDocument extends BaseKottiModel
+    url: "/@@json"
+
+  class KottiDefaultViewSelector extends Backbone.Model
     
 
   app_settings = new AppSettings
@@ -23,8 +30,15 @@ define (require, exports, module) ->
     app_settings
     
         
-    
+  #root_document = new KottiRootDocument
+  #MainChannel.reqres.setHandler 'main:app:root-document', ->
+  #  root_document
+
+  MainChannel.reqres.setHandler 'main:app:get-document', (path) ->
+    new BaseKottiModel
+      id: path
+      
   module.exports =
     AppSettings: AppSettings
-    
+    KottiRootDocument: KottiRootDocument
     

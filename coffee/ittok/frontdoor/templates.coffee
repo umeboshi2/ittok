@@ -10,8 +10,10 @@ define (require, exports, module) ->
   ########################################
   # Templates
   ########################################
-  frontdoor_main = tc.renderable (page) ->
-    tc.raw marked page.content
+  frontdoor_main = tc.renderable (content) ->
+    window.dcon = content
+    tc.raw content.data.attributes.body
+    #tc.div 'hello there'
               
   module.exports =
     frontdoor_main: frontdoor_main

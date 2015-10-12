@@ -10,11 +10,20 @@ define (require, exports, module) ->
   
   handles = ft.misc.mainhandles
 
+  Models = require 'models'
   Views = require 'views'
   AppModel = require 'appmodel'
 
 
   MainChannel = Backbone.Wreqr.radio.channel 'global'
+  global_request = MainChannel.reqres.request
+  
+  bbsync = Backbone.sync
+  Backbone.sync = (method, model, options) ->
+    options.headers =
+      Accept: 'application/vnd.api+json'
+    bbsync method, model, options
+    
 
   class BootstrapModalRegion extends Backbone.Marionette.Region
     el: '#modal'
@@ -31,7 +40,7 @@ define (require, exports, module) ->
         backdrop: false
       @$el.modal 'show'
       
-  initialize_page = (app) ->
+  initialize_page = (app, root_doc) ->
     regions = MainChannel.reqres.request 'main:app:regions'
     appmodel = MainChannel.reqres.request 'main:app:appmodel'
     # create layout view
@@ -41,7 +50,7 @@ define (require, exports, module) ->
     # that the $el is present in the DOM. 
     layout.on 'show', =>
       navbar = new Views.BootstrapNavBarView
-        model: appmodel
+        model: root_doc
       navbar_region = regions.get 'navbar'
       navbar_region.show navbar
     # Show the main layout
@@ -50,7 +59,7 @@ define (require, exports, module) ->
 
 
     
-  prepare_app = (app, appmodel) ->
+  prepare_app = (app, appmodel, root_doc) ->
     regions = appmodel.get 'regions'
     if 'modal' of regions
       regions.modal = BootstrapModalRegion
@@ -65,7 +74,6 @@ define (require, exports, module) ->
         # the user menu on the navbar
         MainChannel.vent.trigger 'appregion:navbar:displayed'
         
-
     # set more main:app handlers
     MainChannel.reqres.setHandler 'main:app:appmodel', ->
       appmodel
@@ -86,11 +94,12 @@ define (require, exports, module) ->
         #console.log "create signal #{signal}"
         MainChannel.reqres.request signal
       # build main page layout
-      MainChannel.reqres.request 'mainpage:init', appmodel
+      MainChannel.reqres.request 'mainpage:init', appmodel, root_doc
       # start the approutes
       # the 'frontdoor_app' should handle the '' <blank>
       # route for the initial page.
       Backbone.history.start() unless Backbone.history.started
+
         
   ######################
   # start app setup
@@ -99,27 +108,31 @@ define (require, exports, module) ->
     #console.log "setHandler main:app:appmodel"
     AppModel
 
-  # set the handler to retrieve the current user from the server
-  set_get_current_user_handler = ft.models.base.set_get_current_user_handler
-  current_user_url = '/@@apiuserview'
-  set_get_current_user_handler MainChannel, current_user_url
-
-        
-  MainChannel.reqres.setHandler 'mainpage:init', (appmodel) =>
+  MainChannel.reqres.setHandler 'mainpage:init', (appmodel, root_doc) =>
     # get the app object
     app = MainChannel.reqres.request 'main:app:object'
     # initialize the main view
-    initialize_page app
+    initialize_page app, root_doc
     # emit the main view is ready
     MainChannel.vent.trigger 'mainpage:displayed'
 
   MainChannel.vent.on 'appregion:navbar:displayed', ->
-    user = MainChannel.reqres.request 'main:app:current-user'
+    doc = MainChannel.reqres.request 'main:app:root-document'
     view = new Views.UserMenuView
-      model: user
+      model: doc
+      
     usermenu = MainChannel.reqres.request 'main:app:get-region', 'usermenu'
     usermenu.show view
 
+  MainChannel.vent.on 'appregion:navbar:displayed', ->
+    view = new Views.MainSearchFormView
+      model: MainChannel.reqres.request 'main:app:root-document'
+    search = MainChannel.reqres.request 'main:app:get-region', 'search'
+    search.show view
+
+  #root_document = new KottiRootDocument
+  #  root_document
+    
   # require applets
   # 
   require 'frontdoor/main'
@@ -130,14 +143,16 @@ define (require, exports, module) ->
   # attach app to window
   window.App = app
 
-  
-  user = MainChannel.reqres.request 'main:app:current-user'
-  #user = null
-  response = user.fetch()
+  #root_doc = MainChannel.reqres.request 'main:app:root-document'
+  here = location.pathname
+  console.log "Hhere we are", here
+  root_doc = MainChannel.reqres.request 'main:app:get-document', here
+  MainChannel.reqres.setHandler 'main:app:root-document', ->
+    root_doc
+  window.root_doc = root_doc
+  response = root_doc.fetch()
   response.done ->
-    console.log 'done done done, got user?', user
-    window.user = user
-    prepare_app app, AppModel
+    prepare_app app, AppModel, root_doc
     app.start()
   
   

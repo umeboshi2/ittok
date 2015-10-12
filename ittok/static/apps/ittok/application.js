@@ -3,7 +3,7 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var AppModel, Backbone, BootstrapModalRegion, MainChannel, Marionette, Views, app, current_user_url, ft, handles, initialize_page, prepare_app, response, set_get_current_user_handler, user;
+    var AppModel, Backbone, BootstrapModalRegion, MainChannel, Marionette, Models, Views, app, bbsync, ft, global_request, handles, here, initialize_page, prepare_app, response, root_doc;
     Backbone = require('backbone');
     Marionette = require('marionette');
     ft = require('furniture');
@@ -11,9 +11,18 @@
     require('bootstrap-fileinput');
     require('json-editor');
     handles = ft.misc.mainhandles;
+    Models = require('models');
     Views = require('views');
     AppModel = require('appmodel');
     MainChannel = Backbone.Wreqr.radio.channel('global');
+    global_request = MainChannel.reqres.request;
+    bbsync = Backbone.sync;
+    Backbone.sync = function(method, model, options) {
+      options.headers = {
+        Accept: 'application/vnd.api+json'
+      };
+      return bbsync(method, model, options);
+    };
     BootstrapModalRegion = (function(superClass) {
       extend(BootstrapModalRegion, superClass);
 
@@ -41,7 +50,7 @@
       return BootstrapModalRegion;
 
     })(Backbone.Marionette.Region);
-    initialize_page = function(app) {
+    initialize_page = function(app, root_doc) {
       var appmodel, layout, mainview, regions;
       regions = MainChannel.reqres.request('main:app:regions');
       appmodel = MainChannel.reqres.request('main:app:appmodel');
@@ -50,7 +59,7 @@
         return function() {
           var navbar, navbar_region;
           navbar = new Views.BootstrapNavBarView({
-            model: appmodel
+            model: root_doc
           });
           navbar_region = regions.get('navbar');
           return navbar_region.show(navbar);
@@ -59,7 +68,7 @@
       mainview = regions.get('mainview');
       return mainview.show(layout);
     };
-    prepare_app = function(app, appmodel) {
+    prepare_app = function(app, appmodel, root_doc) {
       var navbar, region_manager, regions;
       regions = appmodel.get('regions');
       if ('modal' in regions) {
@@ -95,7 +104,7 @@
           signal = "applet:" + applet.appname + ":route";
           MainChannel.reqres.request(signal);
         }
-        MainChannel.reqres.request('mainpage:init', appmodel);
+        MainChannel.reqres.request('mainpage:init', appmodel, root_doc);
         if (!Backbone.history.started) {
           return Backbone.history.start();
         }
@@ -104,35 +113,44 @@
     MainChannel.reqres.setHandler('main:app:appmodel', function() {
       return AppModel;
     });
-    set_get_current_user_handler = ft.models.base.set_get_current_user_handler;
-    current_user_url = '/@@apiuserview';
-    set_get_current_user_handler(MainChannel, current_user_url);
     MainChannel.reqres.setHandler('mainpage:init', (function(_this) {
-      return function(appmodel) {
+      return function(appmodel, root_doc) {
         var app;
         app = MainChannel.reqres.request('main:app:object');
-        initialize_page(app);
+        initialize_page(app, root_doc);
         return MainChannel.vent.trigger('mainpage:displayed');
       };
     })(this));
     MainChannel.vent.on('appregion:navbar:displayed', function() {
-      var user, usermenu, view;
-      user = MainChannel.reqres.request('main:app:current-user');
+      var doc, usermenu, view;
+      doc = MainChannel.reqres.request('main:app:root-document');
       view = new Views.UserMenuView({
-        model: user
+        model: doc
       });
       usermenu = MainChannel.reqres.request('main:app:get-region', 'usermenu');
       return usermenu.show(view);
     });
+    MainChannel.vent.on('appregion:navbar:displayed', function() {
+      var search, view;
+      view = new Views.MainSearchFormView({
+        model: MainChannel.reqres.request('main:app:root-document')
+      });
+      search = MainChannel.reqres.request('main:app:get-region', 'search');
+      return search.show(view);
+    });
     require('frontdoor/main');
     app = new Marionette.Application();
     window.App = app;
-    user = MainChannel.reqres.request('main:app:current-user');
-    response = user.fetch();
+    here = location.pathname;
+    console.log("Hhere we are", here);
+    root_doc = MainChannel.reqres.request('main:app:get-document', here);
+    MainChannel.reqres.setHandler('main:app:root-document', function() {
+      return root_doc;
+    });
+    window.root_doc = root_doc;
+    response = root_doc.fetch();
     response.done(function() {
-      console.log('done done done, got user?', user);
-      window.user = user;
-      prepare_app(app, AppModel);
+      prepare_app(app, AppModel, root_doc);
       return app.start();
     });
     return module.exports = app;

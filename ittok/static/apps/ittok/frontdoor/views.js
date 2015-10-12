@@ -3,7 +3,7 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var Backbone, BaseSideBarView, FDTemplates, FrontDoorMainView, Marionette, SideBarView, ft;
+    var Backbone, BaseSideBarView, FDTemplates, FrontDoorMainView, Marionette, ft;
     Backbone = require('backbone');
     Marionette = require('marionette');
     ft = require('furniture');
@@ -21,19 +21,8 @@
       return FrontDoorMainView;
 
     })(Backbone.Marionette.ItemView);
-    SideBarView = (function(superClass) {
-      extend(SideBarView, superClass);
-
-      function SideBarView() {
-        return SideBarView.__super__.constructor.apply(this, arguments);
-      }
-
-      return SideBarView;
-
-    })(BaseSideBarView);
     return module.exports = {
-      FrontDoorMainView: FrontDoorMainView,
-      SideBarView: SideBarView
+      FrontDoorMainView: FrontDoorMainView
     };
   });
 

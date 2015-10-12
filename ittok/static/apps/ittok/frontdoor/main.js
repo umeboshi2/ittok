@@ -28,16 +28,23 @@
 
     })(BootStrapAppRouter);
     return MainChannel.reqres.setHandler('applet:frontdoor:route', function() {
-      var appmodel, controller, router, sidebar_data;
+      var appmodel, response, root_doc;
+      console.log("frontdoor:route being handled");
       appmodel = MainChannel.reqres.request('main:app:appmodel');
-      sidebar_data = new Backbone.Model({
-        entries: appmodel.get('frontdoor_sidebar')
-      });
-      controller = new Controller(MainChannel);
-      controller.sidebar_model = sidebar_data;
-      return router = new Router({
-        controller: controller
-      });
+      root_doc = MainChannel.reqres.request('main:app:root-document');
+      response = root_doc.fetch();
+      return response.done((function(_this) {
+        return function() {
+          var controller, router;
+          controller = new Controller(MainChannel);
+          controller.root_doc = root_doc;
+          router = new Router({
+            controller: controller
+          });
+          window.controller = controller;
+          return controller.start();
+        };
+      })(this));
     });
   });
 

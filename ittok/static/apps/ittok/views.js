@@ -3,7 +3,7 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var Backbone, BootstrapNavBarView, MainPageLayout, Marionette, Templates, UserMenuView;
+    var Backbone, BootstrapNavBarView, EditBarView, MainPageLayout, MainSearchFormView, Marionette, Templates, UserMenuView;
     Backbone = require('backbone');
     Marionette = require('marionette');
     Templates = require('templates');
@@ -26,7 +26,7 @@
         return BootstrapNavBarView.__super__.constructor.apply(this, arguments);
       }
 
-      BootstrapNavBarView.prototype.template = Templates.BootstrapNavBarTemplate;
+      BootstrapNavBarView.prototype.template = Templates.nav_pt;
 
       BootstrapNavBarView.prototype.regions = {
         usermenu: '#user-menu',
@@ -34,6 +34,30 @@
       };
 
       return BootstrapNavBarView;
+
+    })(Backbone.Marionette.LayoutView);
+    MainSearchFormView = (function(superClass) {
+      extend(MainSearchFormView, superClass);
+
+      function MainSearchFormView() {
+        return MainSearchFormView.__super__.constructor.apply(this, arguments);
+      }
+
+      MainSearchFormView.prototype.template = Templates.nav_pt_search;
+
+      return MainSearchFormView;
+
+    })(Backbone.Marionette.ItemView);
+    EditBarView = (function(superClass) {
+      extend(EditBarView, superClass);
+
+      function EditBarView() {
+        return EditBarView.__super__.constructor.apply(this, arguments);
+      }
+
+      EditBarView.prototype.template = Templates.editor_bar_pt;
+
+      return EditBarView;
 
     })(Backbone.Marionette.LayoutView);
     UserMenuView = (function(superClass) {
@@ -50,6 +74,8 @@
     })(Backbone.Marionette.ItemView);
     return module.exports = {
       MainPageLayout: MainPageLayout,
+      MainSearchFormView: MainSearchFormView,
+      EditBarView: EditBarView,
       BootstrapNavBarView: BootstrapNavBarView,
       UserMenuView: UserMenuView
     };

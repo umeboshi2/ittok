@@ -3,8 +3,9 @@
     var frontdoor_main, marked, tc;
     tc = require('teacup');
     marked = require('marked');
-    frontdoor_main = tc.renderable(function(page) {
-      return tc.raw(marked(page.content));
+    frontdoor_main = tc.renderable(function(content) {
+      window.dcon = content;
+      return tc.raw(content.data.attributes.body);
     });
     return module.exports = {
       frontdoor_main: frontdoor_main

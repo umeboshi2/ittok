@@ -1,19 +1,28 @@
-# modular template loading
 define (require, exports, module) ->
+  $ = require 'jquery'
+  _ = require 'underscore'
   tc = require 'teacup'
-  marked = require 'marked'
 
+  
   # Main Templates must use teacup.
   # The template must be a teacup.renderable, 
   # and accept a layout model as an argument.
-
+  
   ########################################
   # Templates
   ########################################
-  frontdoor_main = tc.renderable (content) ->
-    window.dcon = content
-    tc.raw content.data.attributes.body
-    #tc.div 'hello there'
+  MainLayoutTemplate = tc.renderable () ->
+    tc.div '#navbar-view-container'
+    tc.div '#editor-bar-container'
+    tc.div '.container', ->
+      # edit/breadcrumbs.pt
+      tc.div '#breadcrumbs'
+      tc.div '.row', ->
+        tc.div '#main-content.col-md-9'
+        tc.div '#right-slot.col-md-3.right-column'
+    tc.div '#footer'
+    tc.div '#modal'
+
   MainContentTemplate = tc.renderable (doc) ->
     atts = doc.data.attributes
     tc.article '.document-view.content', ->
@@ -22,8 +31,8 @@ define (require, exports, module) ->
       tc.div '.body', ->
         tc.raw atts.body
         
-              
+  ########################################
   module.exports =
-    frontdoor_main: frontdoor_main
+    MainLayoutTemplate: MainLayoutTemplate
     MainContentTemplate: MainContentTemplate
     

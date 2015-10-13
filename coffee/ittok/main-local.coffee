@@ -81,7 +81,7 @@ require.config
         #filename[1].split(".")[0]
         "application"
       ].join("/")
-      require [modulename, 'furniture'], (App, ft) ->
+      require [modulename], (App) ->
         App
     else
       console.log "no modulename found via location.pathname"  if window.console

@@ -4,17 +4,20 @@ define (require, exports, module) ->
   Marionette = require 'marionette'
   marked = require 'marked'
 
-  ft = require 'furniture'
-  
   MainChannel = Backbone.Wreqr.radio.channel 'global'
   
   Views = require 'frontdoor/views'
 
-  { EditBarView } = require 'views'
+  MainViews = require 'views'
   
-  Util = ft.util
+  Util = require 'util'
 
-  BaseController = ft.controllers.base.BaseController
+  class BaseController extends Backbone.Marionette.Object
+    init_page: () ->
+      # do nothing
+    scroll_top: Util.scroll_top_fast
+    navigate_to_url: Util.navigate_to_url
+    navbar_set_active: Util.navbar_set_active
   
   class Controller extends BaseController
     mainbus: MainChannel
@@ -33,12 +36,26 @@ define (require, exports, module) ->
       if user and 'title' of user
         editbar = @_get_region 'editbar'
         window.editbar = editbar
-        view = new EditBarView
+        view = new MainViews.EditBarView
           model: @root_doc
         editbar.show view
+
+    _make_breadcrumbs: ->
+      data = @root_doc.get 'data'
+      breadcrumbs = data.relationships.meta.breadcrumbs
+      bc = @_get_region 'breadcrumbs'
+      if breadcrumbs.length > 1
+        view = new MainViews.BreadCrumbView
+          model: @root_doc
+        bc.show view
+      else
+        bc.empty()
+        
+      
       
     make_main_content: ->
       @_make_editbar()
+      @_make_breadcrumbs()
       console.log "Make_Main_Content"
       view = new Views.FrontDoorMainView
         model: @root_doc

@@ -2,13 +2,11 @@ define (require, exports, module) ->
   Backbone = require 'backbone'
   Marionette = require 'marionette'
   #Wreqr = require 'backbone.wreqr'
-  ft = require 'furniture'
   require 'bootstrap'
   require 'bootstrap-fileinput'
 
   require 'json-editor'
   
-  handles = ft.misc.mainhandles
 
   Models = require 'models'
   Views = require 'views'
@@ -118,11 +116,11 @@ define (require, exports, module) ->
 
   MainChannel.vent.on 'appregion:navbar:displayed', ->
     doc = MainChannel.reqres.request 'main:app:root-document'
-    view = new Views.UserMenuView
-      model: doc
-      
-    usermenu = MainChannel.reqres.request 'main:app:get-region', 'usermenu'
-    usermenu.show view
+    #view = new Views.UserMenuView
+    #  model: doc
+    #  
+    #usermenu = MainChannel.reqres.request 'main:app:get-region', 'usermenu'
+    #usermenu.show view
 
   MainChannel.vent.on 'appregion:navbar:displayed', ->
     view = new Views.MainSearchFormView

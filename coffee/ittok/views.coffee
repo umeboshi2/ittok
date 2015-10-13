@@ -3,31 +3,34 @@ define (require, exports, module) ->
   Marionette = require 'marionette'
 
 
-  Templates = require 'templates'
-
+  NavTemplates = require 'templates/navbar'
+  EditorBarTemplates = require 'templates/editorbar'
+  LayoutTemplates = require 'templates/layout'
+  MiscTemplates = require 'templates/misc'
+  
+  
   class MainPageLayout extends Backbone.Marionette.LayoutView
-    template: Templates.MainLayoutTemplate
+    template: LayoutTemplates.MainLayoutTemplate
 
   class BootstrapNavBarView extends Backbone.Marionette.LayoutView
-    #template: Templates.BootstrapNavBarTemplate
-    template: Templates.nav_pt
+    template: NavTemplates.nav_pt
+    window.NavTemplates = NavTemplates
     regions:
       #navbarview: '#navbar-view'
       usermenu: '#user-menu'
       mainmenu: '#main-menu'
 
   class MainSearchFormView extends Backbone.Marionette.ItemView
-    template: Templates.nav_pt_search
+    template: NavTemplates.nav_pt_search
     
   class EditBarView extends Backbone.Marionette.LayoutView
-    template: Templates.editor_bar_pt
+    template: EditorBarTemplates.editor_bar_pt
     
-      
-  #class LoginView extends Backbone.Marionette.ItemView
-  #  template: Templates.forms.login_form
-
+  class BreadCrumbView extends Backbone.Marionette.ItemView
+    template: MiscTemplates.breadcrumbs
+    
   class UserMenuView extends Backbone.Marionette.ItemView
-    template: Templates.user_menu
+    template: MiscTemplates.user_menu
     
   module.exports =
     MainPageLayout: MainPageLayout
@@ -35,5 +38,6 @@ define (require, exports, module) ->
     EditBarView: EditBarView
     BootstrapNavBarView: BootstrapNavBarView
     #LoginView: LoginView
+    BreadCrumbView: BreadCrumbView
     UserMenuView: UserMenuView
       

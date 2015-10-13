@@ -3,8 +3,26 @@ define (require, exports, module) ->
   jQuery = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
-  ft = require 'furniture'
-  BaseAppModel = ft.models.base.BaseAppModel
+
+  class BaseAppModel extends Backbone.Model
+    defaults:
+      brand:
+        name: 'Brand'
+        url: '/'
+      frontdoor_app: 'frontdoor'
+      hasUser: false
+      frontdoor_sidebar:
+        [
+          {
+            name: 'Home'
+            url: '/'
+          }
+        ]
+      applets: []
+      regions: {}
+      routes: []
+      
+  
   
       
   appregions = 
@@ -12,6 +30,7 @@ define (require, exports, module) ->
     navbar: '#navbar-view-container'
     editbar: '#editor-bar-container'
     sidebar: '#sidebar'
+    breadcrumbs: '#breadcrumbs'
     content: '#main-content'
     footer: '#footer'
     modal: '#modal'

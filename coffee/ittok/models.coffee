@@ -2,11 +2,11 @@ define (require, exports, module) ->
   $ = require 'jquery'
   _ = require 'underscore'
   Backbone = require 'backbone'
-  ft = require 'furniture'
+  Marionette = require 'marionette'
+  
   
   MainChannel = Backbone.Wreqr.radio.channel 'global'
   
-  BaseLocalStorageModel = ft.models.localstorage
     
   ########################################
   # Models

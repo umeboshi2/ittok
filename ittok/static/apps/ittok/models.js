@@ -3,13 +3,12 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var $, AppSettings, Backbone, BaseKottiModel, BaseLocalStorageModel, KottiDefaultViewSelector, KottiRootDocument, MainChannel, _, app_settings, ft;
+    var $, AppSettings, Backbone, BaseKottiModel, KottiDefaultViewSelector, KottiRootDocument, MainChannel, Marionette, _, app_settings;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
-    ft = require('furniture');
+    Marionette = require('marionette');
     MainChannel = Backbone.Wreqr.radio.channel('global');
-    BaseLocalStorageModel = ft.models.localstorage;
     BaseKottiModel = (function(superClass) {
       extend(BaseKottiModel, superClass);
 
@@ -43,7 +42,7 @@
         return KottiRootDocument.__super__.constructor.apply(this, arguments);
       }
 
-      KottiRootDocument.prototype.url = "/@@json";
+      KottiRootDocument.prototype.url = "@@json";
 
       return KottiRootDocument;
 

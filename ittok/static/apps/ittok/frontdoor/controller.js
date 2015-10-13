@@ -3,17 +3,33 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var $, Backbone, BaseController, Controller, EditBarView, MainChannel, Marionette, Util, Views, ft, marked;
+    var $, Backbone, BaseController, Controller, MainChannel, MainViews, Marionette, Util, Views, marked;
     $ = require('jquery');
     Backbone = require('backbone');
     Marionette = require('marionette');
     marked = require('marked');
-    ft = require('furniture');
     MainChannel = Backbone.Wreqr.radio.channel('global');
     Views = require('frontdoor/views');
-    EditBarView = require('views').EditBarView;
-    Util = ft.util;
-    BaseController = ft.controllers.base.BaseController;
+    MainViews = require('views');
+    Util = require('util');
+    BaseController = (function(superClass) {
+      extend(BaseController, superClass);
+
+      function BaseController() {
+        return BaseController.__super__.constructor.apply(this, arguments);
+      }
+
+      BaseController.prototype.init_page = function() {};
+
+      BaseController.prototype.scroll_top = Util.scroll_top_fast;
+
+      BaseController.prototype.navigate_to_url = Util.navigate_to_url;
+
+      BaseController.prototype.navbar_set_active = Util.navbar_set_active;
+
+      return BaseController;
+
+    })(Backbone.Marionette.Object);
     Controller = (function(superClass) {
       extend(Controller, superClass);
 
@@ -41,16 +57,32 @@
         if (user && 'title' in user) {
           editbar = this._get_region('editbar');
           window.editbar = editbar;
-          view = new EditBarView({
+          view = new MainViews.EditBarView({
             model: this.root_doc
           });
           return editbar.show(view);
         }
       };
 
+      Controller.prototype._make_breadcrumbs = function() {
+        var bc, breadcrumbs, data, view;
+        data = this.root_doc.get('data');
+        breadcrumbs = data.relationships.meta.breadcrumbs;
+        bc = this._get_region('breadcrumbs');
+        if (breadcrumbs.length > 1) {
+          view = new MainViews.BreadCrumbView({
+            model: this.root_doc
+          });
+          return bc.show(view);
+        } else {
+          return bc.empty();
+        }
+      };
+
       Controller.prototype.make_main_content = function() {
         var view;
         this._make_editbar();
+        this._make_breadcrumbs();
         console.log("Make_Main_Content");
         view = new Views.FrontDoorMainView({
           model: this.root_doc

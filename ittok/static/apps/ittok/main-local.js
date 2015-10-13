@@ -77,7 +77,7 @@
       modulename = void 0;
       if (filename && filename[1] !== "" || filename[0] === '/') {
         modulename = ["application"].join("/");
-        require([modulename, 'furniture'], function(App, ft) {
+        require([modulename], function(App) {
           return App;
         });
       } else {

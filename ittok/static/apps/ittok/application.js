@@ -3,14 +3,12 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var AppModel, Backbone, BootstrapModalRegion, MainChannel, Marionette, Models, Views, app, bbsync, ft, global_request, handles, here, initialize_page, prepare_app, response, root_doc;
+    var AppModel, Backbone, BootstrapModalRegion, MainChannel, Marionette, Models, Views, app, bbsync, global_request, here, initialize_page, prepare_app, response, root_doc;
     Backbone = require('backbone');
     Marionette = require('marionette');
-    ft = require('furniture');
     require('bootstrap');
     require('bootstrap-fileinput');
     require('json-editor');
-    handles = ft.misc.mainhandles;
     Models = require('models');
     Views = require('views');
     AppModel = require('appmodel');
@@ -122,13 +120,8 @@
       };
     })(this));
     MainChannel.vent.on('appregion:navbar:displayed', function() {
-      var doc, usermenu, view;
-      doc = MainChannel.reqres.request('main:app:root-document');
-      view = new Views.UserMenuView({
-        model: doc
-      });
-      usermenu = MainChannel.reqres.request('main:app:get-region', 'usermenu');
-      return usermenu.show(view);
+      var doc;
+      return doc = MainChannel.reqres.request('main:app:root-document');
     });
     MainChannel.vent.on('appregion:navbar:displayed', function() {
       var search, view;
@@ -143,6 +136,9 @@
     window.App = app;
     here = location.pathname;
     console.log("Hhere we are", here);
+    if (here === '/') {
+      here = '';
+    }
     root_doc = MainChannel.reqres.request('main:app:get-document', here);
     MainChannel.reqres.setHandler('main:app:root-document', function() {
       return root_doc;

@@ -3,12 +3,10 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var Backbone, BaseSideBarView, FDTemplates, FrontDoorMainView, Marionette, ft;
+    var Backbone, FDTemplates, FrontDoorMainView, Marionette;
     Backbone = require('backbone');
     Marionette = require('marionette');
-    ft = require('furniture');
     FDTemplates = require('frontdoor/templates');
-    BaseSideBarView = ft.views.sidebar;
     FrontDoorMainView = (function(superClass) {
       extend(FrontDoorMainView, superClass);
 
@@ -16,7 +14,7 @@
         return FrontDoorMainView.__super__.constructor.apply(this, arguments);
       }
 
-      FrontDoorMainView.prototype.template = FDTemplates.frontdoor_main;
+      FrontDoorMainView.prototype.template = FDTemplates.MainContentTemplate;
 
       return FrontDoorMainView;
 

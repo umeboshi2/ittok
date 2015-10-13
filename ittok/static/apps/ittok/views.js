@@ -3,10 +3,13 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var Backbone, BootstrapNavBarView, EditBarView, MainPageLayout, MainSearchFormView, Marionette, Templates, UserMenuView;
+    var Backbone, BootstrapNavBarView, BreadCrumbView, EditBarView, EditorBarTemplates, LayoutTemplates, MainPageLayout, MainSearchFormView, Marionette, MiscTemplates, NavTemplates, UserMenuView;
     Backbone = require('backbone');
     Marionette = require('marionette');
-    Templates = require('templates');
+    NavTemplates = require('templates/navbar');
+    EditorBarTemplates = require('templates/editorbar');
+    LayoutTemplates = require('templates/layout');
+    MiscTemplates = require('templates/misc');
     MainPageLayout = (function(superClass) {
       extend(MainPageLayout, superClass);
 
@@ -14,7 +17,7 @@
         return MainPageLayout.__super__.constructor.apply(this, arguments);
       }
 
-      MainPageLayout.prototype.template = Templates.MainLayoutTemplate;
+      MainPageLayout.prototype.template = LayoutTemplates.MainLayoutTemplate;
 
       return MainPageLayout;
 
@@ -26,7 +29,9 @@
         return BootstrapNavBarView.__super__.constructor.apply(this, arguments);
       }
 
-      BootstrapNavBarView.prototype.template = Templates.nav_pt;
+      BootstrapNavBarView.prototype.template = NavTemplates.nav_pt;
+
+      window.NavTemplates = NavTemplates;
 
       BootstrapNavBarView.prototype.regions = {
         usermenu: '#user-menu',
@@ -43,7 +48,7 @@
         return MainSearchFormView.__super__.constructor.apply(this, arguments);
       }
 
-      MainSearchFormView.prototype.template = Templates.nav_pt_search;
+      MainSearchFormView.prototype.template = NavTemplates.nav_pt_search;
 
       return MainSearchFormView;
 
@@ -55,11 +60,23 @@
         return EditBarView.__super__.constructor.apply(this, arguments);
       }
 
-      EditBarView.prototype.template = Templates.editor_bar_pt;
+      EditBarView.prototype.template = EditorBarTemplates.editor_bar_pt;
 
       return EditBarView;
 
     })(Backbone.Marionette.LayoutView);
+    BreadCrumbView = (function(superClass) {
+      extend(BreadCrumbView, superClass);
+
+      function BreadCrumbView() {
+        return BreadCrumbView.__super__.constructor.apply(this, arguments);
+      }
+
+      BreadCrumbView.prototype.template = MiscTemplates.breadcrumbs;
+
+      return BreadCrumbView;
+
+    })(Backbone.Marionette.ItemView);
     UserMenuView = (function(superClass) {
       extend(UserMenuView, superClass);
 
@@ -67,7 +84,7 @@
         return UserMenuView.__super__.constructor.apply(this, arguments);
       }
 
-      UserMenuView.prototype.template = Templates.user_menu;
+      UserMenuView.prototype.template = MiscTemplates.user_menu;
 
       return UserMenuView;
 
@@ -77,6 +94,7 @@
       MainSearchFormView: MainSearchFormView,
       EditBarView: EditBarView,
       BootstrapNavBarView: BootstrapNavBarView,
+      BreadCrumbView: BreadCrumbView,
       UserMenuView: UserMenuView
     };
   });

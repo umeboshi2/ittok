@@ -3,15 +3,27 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var Backbone, BootStrapAppRouter, Controller, MainChannel, Marionette, Router, WikiChannel, Wreqr, ft;
+    var Backbone, BootStrapAppRouter, Controller, MainChannel, Marionette, Router, Util, Wreqr;
     Backbone = require('backbone');
     Marionette = require('marionette');
     Wreqr = require('backbone.wreqr');
-    ft = require('furniture');
+    Util = require('util');
     Controller = require('frontdoor/controller');
     MainChannel = Backbone.Wreqr.radio.channel('global');
-    WikiChannel = Backbone.Wreqr.radio.channel('sitetext');
-    BootStrapAppRouter = ft.approuters.bootstrap.BootStrapAppRouter;
+    BootStrapAppRouter = (function(superClass) {
+      extend(BootStrapAppRouter, superClass);
+
+      function BootStrapAppRouter() {
+        return BootStrapAppRouter.__super__.constructor.apply(this, arguments);
+      }
+
+      BootStrapAppRouter.prototype.onRoute = function(name, path, args) {
+        return Util.navbar_set_active(path);
+      };
+
+      return BootStrapAppRouter;
+
+    })(Backbone.Marionette.AppRouter);
     Router = (function(superClass) {
       extend(Router, superClass);
 

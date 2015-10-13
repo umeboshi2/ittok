@@ -146,6 +146,8 @@ define (require, exports, module) ->
   #root_doc = MainChannel.reqres.request 'main:app:root-document'
   here = location.pathname
   console.log "Hhere we are", here
+  if here == '/'
+    here = ''
   root_doc = MainChannel.reqres.request 'main:app:get-document', here
   MainChannel.reqres.setHandler 'main:app:root-document', ->
     root_doc

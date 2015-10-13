@@ -20,7 +20,7 @@ define (require, exports, module) ->
     id: 'ittok'
 
   class KottiRootDocument extends BaseKottiModel
-    url: "/@@json"
+    url: "@@json"
 
   class KottiDefaultViewSelector extends Backbone.Model
     

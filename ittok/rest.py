@@ -411,6 +411,15 @@ def relational_metadata(obj, request):
     relmeta['has_location_context'] = api.is_location(obj)
     relmeta['view_needed'] = api.view_needed
 
+    breadcrumbs = list()
+    for bc in api.breadcrumbs:
+        breadcrumbs.append(dict(id=bc.id,
+                                name=bc.name,
+                                description=bc.description,
+                                url=api.url(bc),
+                                title=bc.title))
+    relmeta['breadcrumbs'] = breadcrumbs
+    
     # FIXME figure out what to do about page_slots
     #relmeta['page_slots'] = api.slots
     relmeta['paths'] = {

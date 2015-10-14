@@ -3,14 +3,18 @@ from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
 
+from kotti.fanstatic import view_css
+
+
 from .models import (
     DBSession,
     MyModel,
     )
 
 
-@view_config(route_name='home', renderer='templates/mytemplate.pt')
+@view_config(route_name='home', renderer='templates/mainview.mako')
 def my_view(request):
+    view_css.need()
     try:
         one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
     except DBAPIError:

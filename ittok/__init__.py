@@ -44,7 +44,7 @@ default_settings = {
     'kotti.request_factory': 'kotti.request.Request',
     'kotti.root_factory': 'kotti.resources.default_get_root',
     'kotti.use_tables': '',
-    'pyramid.includes': 'ittok',
+    'pyramid.includes': 'ittok pyramid_mako',
     }
 
 def main(global_config, **settings):

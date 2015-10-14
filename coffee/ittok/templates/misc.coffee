@@ -3,6 +3,10 @@ define (require, exports, module) ->
   _ = require 'underscore'
   tc = require 'teacup'
 
+
+
+  { dropdown_toggle
+    frontdoor_url } = require 'templates/common'
   
   # Main Templates must use teacup.
   # The template must be a teacup.renderable, 
@@ -35,7 +39,7 @@ define (require, exports, module) ->
       tc.small 'You are here:  '
       for item in doc.data.relationships.meta.breadcrumbs
         tc.li ->
-          tc.a href:item.url, item.title
+          tc.a href:frontdoor_url(item.path), item.title
           
   ########################################
   module.exports =

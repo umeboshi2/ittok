@@ -60,9 +60,27 @@ define (require, exports, module) ->
       view = new Views.FrontDoorMainView
         model: @root_doc
       @_show_content view
-      
+
+    view_resource: (resource) ->
+      @root_doc.id = "/#{resource}"
+      response = @root_doc.fetch()
+      response.done =>
+        view = new Views.FrontDoorMainView
+          model: @root_doc
+        @_show_content view
+        @_make_breadcrumbs()
+
+    frontdoor: ->
+      @root_doc.id = ""
+      response = @root_doc.fetch()
+      response.done =>
+        view = new Views.FrontDoorMainView
+          model: @root_doc
+        @_show_content view
+        @_make_breadcrumbs()
+        
     start: ->
-      console.log 'controller.start called'
+      #console.log 'controller.start called'
       @make_main_content()
       #console.log 'frontdoor started'
 

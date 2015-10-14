@@ -19,7 +19,9 @@ define (require, exports, module) ->
   class Router extends BootStrapAppRouter
     appRoutes:
       '': 'start'
-      'frontdoor': 'start'
+      'frontdoor': 'frontdoor'
+      'frontdoor/view': 'frontdoor'
+      'frontdoor/view/*resource': 'view_resource'
       
   MainChannel.reqres.setHandler 'applet:frontdoor:route', () ->
     console.log "frontdoor:route being handled"

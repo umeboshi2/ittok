@@ -2,7 +2,7 @@
 components = '../../components'
 # require config comes first
 require.config
-  baseUrl: '/fanstatic/ittok/apps/ittok'
+  baseUrl: '/static/apps/ittok'
   paths:
     #ace: "#{components}/ace/lib/ace"
     ace: "#{components}/ace-builds/src-min"

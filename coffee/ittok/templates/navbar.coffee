@@ -4,7 +4,8 @@ define (require, exports, module) ->
   tc = require 'teacup'
 
   { navbar_collapse_button
-    dropdown_toggle } = require 'templates/common'
+    dropdown_toggle
+    frontdoor_url } = require 'templates/common'
     
   
   # Main Templates must use teacup.
@@ -31,7 +32,7 @@ define (require, exports, module) ->
     tc.div '.container-fluid', ->
       tc.div '.navbar-header', ->
         navbar_collapse_button 'navbar-view-collapse'
-        tc.a '.navbar-brand', href:relmeta.application_url, relmeta.site_title
+        tc.a '.navbar-brand', href:'#frontdoor', relmeta.site_title
       tc.div '#navbar-view-collapse.collapse.navbar-collapse', ->
         tc.ul '.nav.navbar-nav', ->
           for item in relmeta.navitems
@@ -39,7 +40,8 @@ define (require, exports, module) ->
             if item.inside
               isactive = ".active"
             tc.li isactive, ->
-              tc.a href:item.url, title:item.description, item.title
+              tc.a href:frontdoor_url(item.path),
+              title:item.description, item.title
         tc.ul '#user-menu.nav.navbar-nav.navbar-right'
         tc.div '#form-search-container'
 

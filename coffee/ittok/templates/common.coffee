@@ -22,9 +22,13 @@ define (require, exports, module) ->
   dropdown_toggle = tc.component (selector, attrs, renderContents) ->
     tc.a "#{selector}.dropdown-toggle", href:attrs.href,
     'data-toggle':'dropdown', renderContents
-    
+
+  frontdoor_url = (path) ->
+    stripped_path = path.replace /\/$/, ""
+    "#frontdoor/view#{stripped_path}"
               
   ########################################
   module.exports =
     navbar_collapse_button: navbar_collapse_button
     dropdown_toggle: dropdown_toggle
+    frontdoor_url: frontdoor_url

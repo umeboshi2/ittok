@@ -33,7 +33,9 @@
 
       Router.prototype.appRoutes = {
         '': 'start',
-        'frontdoor': 'start'
+        'frontdoor': 'frontdoor',
+        'frontdoor/view': 'frontdoor',
+        'frontdoor/view/*resource': 'view_resource'
       };
 
       return Router;

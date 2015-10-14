@@ -1,6 +1,6 @@
 (function() {
   define(function(require, exports, module) {
-    var $, _, dropdown_toggle, navbar_collapse_button, tc;
+    var $, _, dropdown_toggle, frontdoor_url, navbar_collapse_button, tc;
     $ = require('jquery');
     _ = require('underscore');
     tc = require('teacup');
@@ -22,9 +22,15 @@
         'data-toggle': 'dropdown'
       }, renderContents);
     });
+    frontdoor_url = function(path) {
+      var stripped_path;
+      stripped_path = path.replace(/\/$/, "");
+      return "#frontdoor/view" + stripped_path;
+    };
     return module.exports = {
       navbar_collapse_button: navbar_collapse_button,
-      dropdown_toggle: dropdown_toggle
+      dropdown_toggle: dropdown_toggle,
+      frontdoor_url: frontdoor_url
     };
   });
 

@@ -1,10 +1,10 @@
 (function() {
   define(function(require, exports, module) {
-    var $, _, dropdown_toggle, nav_pt, nav_pt_content, nav_pt_search, navbar_collapse_button, ref, tc;
+    var $, _, dropdown_toggle, frontdoor_url, nav_pt, nav_pt_content, nav_pt_search, navbar_collapse_button, ref, tc;
     $ = require('jquery');
     _ = require('underscore');
     tc = require('teacup');
-    ref = require('templates/common'), navbar_collapse_button = ref.navbar_collapse_button, dropdown_toggle = ref.dropdown_toggle;
+    ref = require('templates/common'), navbar_collapse_button = ref.navbar_collapse_button, dropdown_toggle = ref.dropdown_toggle, frontdoor_url = ref.frontdoor_url;
     nav_pt_search = tc.renderable(function(doc) {
       var relmeta;
       relmeta = doc.data.relationships.meta;
@@ -37,7 +37,7 @@
         tc.div('.navbar-header', function() {
           navbar_collapse_button('navbar-view-collapse');
           return tc.a('.navbar-brand', {
-            href: relmeta.application_url
+            href: '#frontdoor'
           }, relmeta.site_title);
         });
         return tc.div('#navbar-view-collapse.collapse.navbar-collapse', function() {
@@ -53,7 +53,7 @@
               }
               results.push(tc.li(isactive, function() {
                 return tc.a({
-                  href: item.url,
+                  href: frontdoor_url(item.path),
                   title: item.description
                 }, item.title);
               }));

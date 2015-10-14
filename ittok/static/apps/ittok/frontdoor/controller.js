@@ -90,8 +90,39 @@
         return this._show_content(view);
       };
 
+      Controller.prototype.view_resource = function(resource) {
+        var response;
+        this.root_doc.id = "/" + resource;
+        response = this.root_doc.fetch();
+        return response.done((function(_this) {
+          return function() {
+            var view;
+            view = new Views.FrontDoorMainView({
+              model: _this.root_doc
+            });
+            _this._show_content(view);
+            return _this._make_breadcrumbs();
+          };
+        })(this));
+      };
+
+      Controller.prototype.frontdoor = function() {
+        var response;
+        this.root_doc.id = "";
+        response = this.root_doc.fetch();
+        return response.done((function(_this) {
+          return function() {
+            var view;
+            view = new Views.FrontDoorMainView({
+              model: _this.root_doc
+            });
+            _this._show_content(view);
+            return _this._make_breadcrumbs();
+          };
+        })(this));
+      };
+
       Controller.prototype.start = function() {
-        console.log('controller.start called');
         return this.make_main_content();
       };
 

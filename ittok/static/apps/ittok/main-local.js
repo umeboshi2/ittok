@@ -4,7 +4,7 @@
   components = '../../components';
 
   require.config({
-    baseUrl: '/fanstatic/ittok/apps/ittok',
+    baseUrl: '/static/apps/ittok',
     paths: {
       ace: components + "/ace-builds/src-min",
       backbone: components + "/backbone/backbone",

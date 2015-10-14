@@ -5,9 +5,6 @@ define (require, exports, module) ->
   require 'bootstrap'
   require 'bootstrap-fileinput'
 
-  require 'json-editor'
-  
-
   Models = require 'models'
   Views = require 'views'
   AppModel = require 'appmodel'

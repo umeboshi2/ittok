@@ -1,59 +1,47 @@
 import os
 
-from setuptools import setup
-from setuptools import find_packages
+from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-try:
-    README = open(os.path.join(here, 'README.rst')).read()
-except IOError:
-    README = ''
-try:
-    CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
-except IOError:
-    CHANGES = ''
+with open(os.path.join(here, 'README.txt')) as f:
+    README = f.read()
+with open(os.path.join(here, 'CHANGES.txt')) as f:
+    CHANGES = f.read()
 
-version = '0.1dev'
+requires = [
+    'pyramid',
+    'pyramid_chameleon',
+    'pyramid_debugtoolbar',
+    'pyramid_tm',
+    'SQLAlchemy',
+    'transaction',
+    'zope.sqlalchemy',
+    'waitress',
+    ]
 
-install_requires = [
-    'Kotti>=1.0.0',
-    'kotti_calendar',
-    'kotti_tinymce',
-    'kotti_settings',
-    'kotti_blog',
-]
-
-
-setup(
-    name='ittok',
-    version=version,
-    description="Add on for Kotti",
-    long_description='\n\n'.join([README, CHANGES]),
-    classifiers=[
+setup(name='ittok',
+      version='0.0',
+      description='ittok',
+      long_description=README + '\n\n' + CHANGES,
+      classifiers=[
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.6",
-        "Programming Language :: Python :: 2.7",
-        "Framework :: Pylons",
+        "Framework :: Pyramid",
         "Topic :: Internet :: WWW/HTTP",
-        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
-        "License :: Repoze Public License",
-    ],
-    author='Kotti developers',
-    author_email='kotti@googlegroups.com',
-    url='https://github.com/umeboshi2/ittok',
-    keywords='kotti web cms wcms pylons pyramid sqlalchemy bootstrap',
-    license="BSD-derived (http://www.repoze.org/LICENSE.txt)",
-    packages=find_packages(),
-    include_package_data=True,
-    zip_safe=False,
-    install_requires=install_requires,
-    tests_require=[],
-    dependency_links=[],
-    entry_points={
-        'fanstatic.libraries': [
-            'ittok = ittok.fanstatic:library',
         ],
-    },
-    extras_require={},
-)
+      author='',
+      author_email='',
+      url='',
+      keywords='web wsgi bfg pylons pyramid',
+      packages=find_packages(),
+      include_package_data=True,
+      zip_safe=False,
+      test_suite='ittok',
+      install_requires=requires,
+      entry_points="""\
+      [paste.app_factory]
+      main = ittok:main
+      [console_scripts]
+      initialize_ittok_db = ittok.scripts.initializedb:main
+      """,
+      )

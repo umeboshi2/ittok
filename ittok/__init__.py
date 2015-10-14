@@ -1,48 +1,68 @@
-# -*- coding: utf-8 -*-
+from pyramid.config import Configurator
+from sqlalchemy import engine_from_config
 
-"""
-Created on 2015-10-05
-:author: Joseph Rawson (joseph.rawson.works@gmail.com)
-"""
+import kotti
 
-from kotti.resources import File
-from pyramid.i18n import TranslationStringFactory
-
-_ = TranslationStringFactory('ittok')
+from .models import (
+    DBSession,
+    Base,
+    )
 
 
-def kotti_configure(settings):
-    """ Add a line like this to you .ini file::
+# All of these can be set by passing them in the Paste Deploy settings:
+default_settings = {
+    'kotti.asset_overrides': '',
+    'kotti.authn_policy_factory': 'kotti.authtkt_factory',
+    'kotti.authz_policy_factory': 'kotti.acl_factory',
+    'kotti.available_types': ' '.join([
+        'kotti.resources.Document',
+        'kotti.resources.File',
+        'kotti.resources.Image',
+        ]),
+    'kotti.base_includes': ' '.join([
+        'kotti',
+        'kotti.filedepot',
+        'kotti.events',
+        'kotti.sanitizers',
+        'kotti.views',
+        'kotti_jsonapi.rest',
+        'kotti.views.cache',
+        'kotti.views.view',
+        'kotti.views.edit',
+        'kotti.views.edit.actions',
+        'kotti.views.edit.content',
+        'kotti.views.edit.default_views',
+        'kotti.views.edit.upload',
+        'kotti.views.file',
+        'kotti.views.image',
+        'kotti.views.login',
+        'kotti.views.navigation',
+        'kotti.views.users',
+        ]),
+    'kotti.populators': 'kotti.populate.populate',
+    'kotti.principals_factory': 'kotti.security.principals_factory',
+    'kotti.request_factory': 'kotti.request.Request',
+    'kotti.root_factory': 'kotti.resources.default_get_root',
+    'kotti.use_tables': '',
+    'pyramid.includes': 'ittok',
+    }
 
-            kotti.configurators =
-                ittok.kotti_configure
-
-        to enable the ``ittok`` add-on.
-
-    :param settings: Kotti configuration dictionary.
-    :type settings: dict
+def main(global_config, **settings):
+    """ This function returns a Pyramid WSGI application.
     """
-
-    settings['pyramid.includes'] += ' ittok pyramid_mako'
-    settings['kotti.alembic_dirs'] += ' ittok:alembic'
-    settings['kotti.available_types'] += ' ittok.resources.CustomContent'
-    #settings['kotti.fanstatic.view_needed'] = ' ittok.fanstatic.css_and_js'
-    File.type_info.addable_to.append('CustomContent')
-
-
-def includeme(config):
-    """ Don't add this to your ``pyramid_includes``, but add the
-    ``kotti_configure`` above to your ``kotti.configurators`` instead.
-
-    :param config: Pyramid configurator object.
-    :type config: :class:`pyramid.config.Configurator`
-    """
-
-    config.add_translation_dirs('ittok:locale')
-    config.add_static_view('static-ittok', 'ittok:static')
-    config.add_view(
-        name='tenyu',
-        renderer='ittok:templates/tenyu.mako')
-    config.include('ittok.rest')
-    config.scan(__name__)
+    settings2 = default_settings.copy()
+    settings2.update(settings)
     
+    config = kotti.base_configure(global_config, **settings2)
+    config.add_static_view(name='static', path='ittok:static', cache_max_age=3600)
+    
+    engine = engine_from_config(config.registry.settings, 'sqlalchemy.')
+    kotti.resources.initialize_sql(engine)
+
+    DBSession.configure(bind=engine)
+    Base.metadata.bind = engine
+
+    config.include('pyramid_chameleon')
+    config.add_route('home', '/')
+    config.scan()
+    return config.make_wsgi_app()

@@ -12,47 +12,9 @@ define (require, exports, module) ->
   
   Util = require 'util'
 
-  class BaseController extends Backbone.Marionette.Object
-    init_page: () ->
-      # do nothing
-    scroll_top: Util.scroll_top_fast
-    navigate_to_url: Util.navigate_to_url
-    navbar_set_active: Util.navbar_set_active
+  { MainController } = require 'controllers'
   
-  class Controller extends BaseController
-    mainbus: MainChannel
-    _get_region: (region) ->
-      MainChannel.reqres.request 'main:app:get-region', region
-      
-    _show_content: (view) ->
-      content = @_get_region 'content'
-      content.show view
-
-    _make_editbar: ->
-      data = @root_doc.get 'data'
-      user = data.relationships.meta.current_user
-      console.log "_make_editbar", user
-      # should have better way to check user?
-      if user and 'title' of user
-        editbar = @_get_region 'editbar'
-        window.editbar = editbar
-        view = new MainViews.EditBarView
-          model: @root_doc
-        editbar.show view
-
-    _make_breadcrumbs: ->
-      data = @root_doc.get 'data'
-      breadcrumbs = data.relationships.meta.breadcrumbs
-      bc = @_get_region 'breadcrumbs'
-      if breadcrumbs.length > 1
-        view = new MainViews.BreadCrumbView
-          model: @root_doc
-        bc.show view
-      else
-        bc.empty()
-        
-      
-      
+  class Controller extends MainController
     make_main_content: ->
       @_make_editbar()
       @_make_breadcrumbs()
@@ -61,23 +23,23 @@ define (require, exports, module) ->
         model: @root_doc
       @_show_content view
 
-    view_resource: (resource) ->
-      @root_doc.id = "/#{resource}"
+    _view_resource: -> 
       response = @root_doc.fetch()
       response.done =>
+        @_make_editbar()
+        @_make_breadcrumbs()
         view = new Views.FrontDoorMainView
           model: @root_doc
         @_show_content view
-        @_make_breadcrumbs()
-
+     
+    view_resource: (resource) ->
+      console.log "RESOURCE", resource
+      @root_doc.id = "/#{resource}"
+      @_view_resource()
+      
     frontdoor: ->
       @root_doc.id = ""
-      response = @root_doc.fetch()
-      response.done =>
-        view = new Views.FrontDoorMainView
-          model: @root_doc
-        @_show_content view
-        @_make_breadcrumbs()
+      @_view_resource()
         
     start: ->
       #console.log 'controller.start called'

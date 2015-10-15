@@ -12,12 +12,18 @@ define (require, exports, module) ->
 
   MainChannel = Backbone.Wreqr.radio.channel 'global'
   global_request = MainChannel.reqres.request
-  
-  bbsync = Backbone.sync
-  Backbone.sync = (method, model, options) ->
-    options.headers =
-      Accept: 'application/vnd.api+json'
-    bbsync method, model, options
+
+  # FIXME
+  # sync should probably be overridden in model/collection
+  # instead of globally
+  # also, I could never get the rest view to respond to
+  # this accept header and decided to use "@@json" instead.
+  # 
+  #bbsync = Backbone.sync
+  #Backbone.sync = (method, model, options) ->
+  #  options.headers =
+  #    Accept: 'application/vnd.api+json'
+  #  bbsync method, model, options
     
 
   class BootstrapModalRegion extends Backbone.Marionette.Region
@@ -112,7 +118,8 @@ define (require, exports, module) ->
     MainChannel.vent.trigger 'mainpage:displayed'
 
   MainChannel.vent.on 'appregion:navbar:displayed', ->
-    doc = MainChannel.reqres.request 'main:app:root-document'
+    doc = MainChannel.reqres.request 'main:app:current-document'
+    
     #view = new Views.UserMenuView
     #  model: doc
     #  
@@ -121,7 +128,7 @@ define (require, exports, module) ->
 
   MainChannel.vent.on 'appregion:navbar:displayed', ->
     view = new Views.MainSearchFormView
-      model: MainChannel.reqres.request 'main:app:root-document'
+      model: MainChannel.reqres.request 'main:app:current-document'
     search = MainChannel.reqres.request 'main:app:get-region', 'search'
     search.show view
 
@@ -135,7 +142,7 @@ define (require, exports, module) ->
 
   
   app = new Marionette.Application()
-  # attach app to window
+  # DEBUG attach app to window
   window.App = app
 
   #root_doc = MainChannel.reqres.request 'main:app:root-document'
@@ -143,13 +150,14 @@ define (require, exports, module) ->
   console.log "Hhere we are", here
   if here == '/'
     here = ''
-  root_doc = MainChannel.reqres.request 'main:app:get-document', here
-  MainChannel.reqres.setHandler 'main:app:root-document', ->
-    root_doc
-  window.root_doc = root_doc
-  response = root_doc.fetch()
+  current_doc = MainChannel.reqres.request 'main:app:get-document', here
+  MainChannel.reqres.setHandler 'main:app:current-document', ->
+    current_doc
+  # DEBUG  
+  window.current_doc = current_doc
+  response = current_doc.fetch()
   response.done ->
-    prepare_app app, AppModel, root_doc
+    prepare_app app, AppModel, current_doc
     app.start()
   
   

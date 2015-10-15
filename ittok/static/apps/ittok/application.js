@@ -3,7 +3,7 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var AppModel, Backbone, BootstrapModalRegion, MainChannel, Marionette, Models, Views, app, bbsync, global_request, here, initialize_page, prepare_app, response, root_doc;
+    var AppModel, Backbone, BootstrapModalRegion, MainChannel, Marionette, Models, Views, app, current_doc, global_request, here, initialize_page, prepare_app, response;
     Backbone = require('backbone');
     Marionette = require('marionette');
     require('bootstrap');
@@ -13,13 +13,6 @@
     AppModel = require('appmodel');
     MainChannel = Backbone.Wreqr.radio.channel('global');
     global_request = MainChannel.reqres.request;
-    bbsync = Backbone.sync;
-    Backbone.sync = function(method, model, options) {
-      options.headers = {
-        Accept: 'application/vnd.api+json'
-      };
-      return bbsync(method, model, options);
-    };
     BootstrapModalRegion = (function(superClass) {
       extend(BootstrapModalRegion, superClass);
 
@@ -120,12 +113,12 @@
     })(this));
     MainChannel.vent.on('appregion:navbar:displayed', function() {
       var doc;
-      return doc = MainChannel.reqres.request('main:app:root-document');
+      return doc = MainChannel.reqres.request('main:app:current-document');
     });
     MainChannel.vent.on('appregion:navbar:displayed', function() {
       var search, view;
       view = new Views.MainSearchFormView({
-        model: MainChannel.reqres.request('main:app:root-document')
+        model: MainChannel.reqres.request('main:app:current-document')
       });
       search = MainChannel.reqres.request('main:app:get-region', 'search');
       return search.show(view);
@@ -138,14 +131,14 @@
     if (here === '/') {
       here = '';
     }
-    root_doc = MainChannel.reqres.request('main:app:get-document', here);
-    MainChannel.reqres.setHandler('main:app:root-document', function() {
-      return root_doc;
+    current_doc = MainChannel.reqres.request('main:app:get-document', here);
+    MainChannel.reqres.setHandler('main:app:current-document', function() {
+      return current_doc;
     });
-    window.root_doc = root_doc;
-    response = root_doc.fetch();
+    window.current_doc = current_doc;
+    response = current_doc.fetch();
     response.done(function() {
-      prepare_app(app, AppModel, root_doc);
+      prepare_app(app, AppModel, current_doc);
       return app.start();
     });
     return module.exports = app;

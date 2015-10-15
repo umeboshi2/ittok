@@ -3,7 +3,7 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var $, Backbone, BaseController, Controller, MainChannel, MainViews, Marionette, Util, Views, marked;
+    var $, Backbone, Controller, MainChannel, MainController, MainViews, Marionette, Util, Views, marked;
     $ = require('jquery');
     Backbone = require('backbone');
     Marionette = require('marionette');
@@ -12,72 +12,13 @@
     Views = require('frontdoor/views');
     MainViews = require('views');
     Util = require('util');
-    BaseController = (function(superClass) {
-      extend(BaseController, superClass);
-
-      function BaseController() {
-        return BaseController.__super__.constructor.apply(this, arguments);
-      }
-
-      BaseController.prototype.init_page = function() {};
-
-      BaseController.prototype.scroll_top = Util.scroll_top_fast;
-
-      BaseController.prototype.navigate_to_url = Util.navigate_to_url;
-
-      BaseController.prototype.navbar_set_active = Util.navbar_set_active;
-
-      return BaseController;
-
-    })(Backbone.Marionette.Object);
+    MainController = require('controllers').MainController;
     Controller = (function(superClass) {
       extend(Controller, superClass);
 
       function Controller() {
         return Controller.__super__.constructor.apply(this, arguments);
       }
-
-      Controller.prototype.mainbus = MainChannel;
-
-      Controller.prototype._get_region = function(region) {
-        return MainChannel.reqres.request('main:app:get-region', region);
-      };
-
-      Controller.prototype._show_content = function(view) {
-        var content;
-        content = this._get_region('content');
-        return content.show(view);
-      };
-
-      Controller.prototype._make_editbar = function() {
-        var data, editbar, user, view;
-        data = this.root_doc.get('data');
-        user = data.relationships.meta.current_user;
-        console.log("_make_editbar", user);
-        if (user && 'title' in user) {
-          editbar = this._get_region('editbar');
-          window.editbar = editbar;
-          view = new MainViews.EditBarView({
-            model: this.root_doc
-          });
-          return editbar.show(view);
-        }
-      };
-
-      Controller.prototype._make_breadcrumbs = function() {
-        var bc, breadcrumbs, data, view;
-        data = this.root_doc.get('data');
-        breadcrumbs = data.relationships.meta.breadcrumbs;
-        bc = this._get_region('breadcrumbs');
-        if (breadcrumbs.length > 1) {
-          view = new MainViews.BreadCrumbView({
-            model: this.root_doc
-          });
-          return bc.show(view);
-        } else {
-          return bc.empty();
-        }
-      };
 
       Controller.prototype.make_main_content = function() {
         var view;
@@ -90,36 +31,31 @@
         return this._show_content(view);
       };
 
-      Controller.prototype.view_resource = function(resource) {
+      Controller.prototype._view_resource = function() {
         var response;
-        this.root_doc.id = "/" + resource;
         response = this.root_doc.fetch();
         return response.done((function(_this) {
           return function() {
             var view;
+            _this._make_editbar();
+            _this._make_breadcrumbs();
             view = new Views.FrontDoorMainView({
               model: _this.root_doc
             });
-            _this._show_content(view);
-            return _this._make_breadcrumbs();
+            return _this._show_content(view);
           };
         })(this));
       };
 
+      Controller.prototype.view_resource = function(resource) {
+        console.log("RESOURCE", resource);
+        this.root_doc.id = "/" + resource;
+        return this._view_resource();
+      };
+
       Controller.prototype.frontdoor = function() {
-        var response;
         this.root_doc.id = "";
-        response = this.root_doc.fetch();
-        return response.done((function(_this) {
-          return function() {
-            var view;
-            view = new Views.FrontDoorMainView({
-              model: _this.root_doc
-            });
-            _this._show_content(view);
-            return _this._make_breadcrumbs();
-          };
-        })(this));
+        return this._view_resource();
       };
 
       Controller.prototype.start = function() {
@@ -128,7 +64,7 @@
 
       return Controller;
 
-    })(BaseController);
+    })(MainController);
     return module.exports = Controller;
   });
 

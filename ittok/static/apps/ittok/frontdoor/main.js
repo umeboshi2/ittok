@@ -42,23 +42,13 @@
 
     })(BootStrapAppRouter);
     return MainChannel.reqres.setHandler('applet:frontdoor:route', function() {
-      var appmodel, response, root_doc;
+      var controller, router;
       console.log("frontdoor:route being handled");
-      appmodel = MainChannel.reqres.request('main:app:appmodel');
-      root_doc = MainChannel.reqres.request('main:app:root-document');
-      response = root_doc.fetch();
-      return response.done((function(_this) {
-        return function() {
-          var controller, router;
-          controller = new Controller(MainChannel);
-          controller.root_doc = root_doc;
-          router = new Router({
-            controller: controller
-          });
-          window.controller = controller;
-          return controller.start();
-        };
-      })(this));
+      controller = new Controller(MainChannel);
+      controller.root_doc = MainChannel.reqres.request('main:app:current-document');
+      return router = new Router({
+        controller: controller
+      });
     });
   });
 

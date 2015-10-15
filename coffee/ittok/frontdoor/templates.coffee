@@ -21,8 +21,27 @@ define (require, exports, module) ->
       tc.p '.lead', atts.description
       tc.div '.body', ->
         tc.raw atts.body
-        
-              
+
+  FolderViewTemplate = tc.renderable (doc) ->
+    atts = doc.data.attributes
+    tc.article '.document-view.content', ->
+      tc.h1 atts.title
+      tc.p '.lead', atts.description
+      #tc.div tags
+      # FIXME i18n
+      tc.h2 'Contents'
+      tc.div '.body', ->
+        tc.table '.table.table-condensed', ->
+          tc.thead ->
+            tc.tr ->
+              # FIXME I18N
+              tc.th 'Title'
+              tc.th 'Type'
+              tc.th 'Creation Date'
+              tc.th 'Modification Date'
+          tc.tbody ->
+            null
+            
   module.exports =
     frontdoor_main: frontdoor_main
     MainContentTemplate: MainContentTemplate

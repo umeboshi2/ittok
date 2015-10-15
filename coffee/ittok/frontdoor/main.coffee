@@ -25,17 +25,8 @@ define (require, exports, module) ->
       
   MainChannel.reqres.setHandler 'applet:frontdoor:route', () ->
     console.log "frontdoor:route being handled"
-    #page_collection = WikiChannel.reqres.request 'get-pages'
-    #response = page_collection.fetch()
-    #response.done =>
-    appmodel = MainChannel.reqres.request 'main:app:appmodel'
-    root_doc = MainChannel.reqres.request 'main:app:root-document'
-    response = root_doc.fetch()
-    response.done =>
-      controller = new Controller MainChannel
-      controller.root_doc = root_doc
-      router = new Router
-        controller: controller
-      #console.log 'router created'
-      window.controller = controller
-      controller.start()
+    controller = new Controller MainChannel
+    controller.root_doc = MainChannel.reqres.request 'main:app:current-document'
+    router = new Router
+      controller: controller
+      

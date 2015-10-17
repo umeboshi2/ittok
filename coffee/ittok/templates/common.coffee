@@ -27,8 +27,17 @@ define (require, exports, module) ->
     stripped_path = path.replace /\/$/, ""
     "#frontdoor/view#{stripped_path}"
               
+  editor_url = (action, path) ->
+    #console.log "action, path", action, path
+    rstripped_path = path.replace /\/$/, ""
+    lstripped_path = rstripped_path.replace /^\//, ""
+    #console.log "lstripped_path", lstripped_path
+    "#editor/#{action}/#{lstripped_path}"
+              
   ########################################
   module.exports =
     navbar_collapse_button: navbar_collapse_button
     dropdown_toggle: dropdown_toggle
     frontdoor_url: frontdoor_url
+    editor_url: editor_url
+    

@@ -132,6 +132,16 @@ define (require, exports, module) ->
     search = MainChannel.reqres.request 'main:app:get-region', 'search'
     search.show view
 
+  MainChannel.reqres.setHandler 'main:app:display-message', (msg, lvl) =>
+    messages = MainChannel.reqres.request 'main:app:get-region', 'messages'
+    Message = new Backbone.Model
+      content: msg
+      level: lvl
+    view = new Views.MessageView
+      model: Message
+    messages.show view
+    
+    
   #root_document = new KottiRootDocument
   #  root_document
     
@@ -140,14 +150,13 @@ define (require, exports, module) ->
   require 'frontdoor/main'
 
 
-  
   app = new Marionette.Application()
   # DEBUG attach app to window
   window.App = app
 
   #root_doc = MainChannel.reqres.request 'main:app:root-document'
   here = location.pathname
-  console.log "Hhere we are", here
+  #console.log "Here we are", here
   if here == '/'
     here = ''
   current_doc = MainChannel.reqres.request 'main:app:get-document', here

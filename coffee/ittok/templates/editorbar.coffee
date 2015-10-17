@@ -5,7 +5,10 @@ define (require, exports, module) ->
 
 
   { navbar_collapse_button
-    dropdown_toggle } = require 'templates/common'
+    dropdown_toggle
+    frontdoor_url
+    editor_url } = require 'templates/common'
+    
     
   
   # Main Templates must use teacup.
@@ -111,6 +114,7 @@ define (require, exports, module) ->
             
   editor_bar_pt_content = tc.renderable (doc) ->
     relmeta = doc.data.relationships.meta
+    this_path = relmeta.paths.this_path
     tc.div '.container-fluid', ->
       tc.div '.navbar-header', ->
         navbar_collapse_button 'navbar-edit'
@@ -118,15 +122,18 @@ define (require, exports, module) ->
         tc.ul '.nav.navbar-nav.navbar-left', ->
           if relmeta.has_permission.edit
             workflow_dropdown doc
+          # FIXME, check another way for active
           isactive = ''
           if relmeta.request_url == relmeta.api_url
             isactive = '.active'
           tc.li ->
-            tc.a href:relmeta.api_url, "View"
+            href = frontdoor_url this_path
+            tc.a href:href, "View"
           # FIXME: figure out disable_context_links
           for link in relmeta.edit_links
             tc.li ->
-              tc.a href:link.url, link.title
+              href = editor_url link.name, this_path
+              tc.a href:href, link.title
           if relmeta.has_permission.edit
             actions_dropdown doc
           if relmeta.has_permission.add
@@ -168,5 +175,6 @@ define (require, exports, module) ->
           
   ########################################
   module.exports =
+    workflow_dropdown: workflow_dropdown
     editor_bar_pt: editor_bar_pt
     

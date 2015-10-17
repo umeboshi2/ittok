@@ -31,6 +31,9 @@ define (require, exports, module) ->
     
   class UserMenuView extends Backbone.Marionette.ItemView
     template: MiscTemplates.user_menu
+
+  class MessageView extends Backbone.Marionette.ItemView
+    template:MiscTemplates.message_box
     
   module.exports =
     MainPageLayout: MainPageLayout
@@ -40,4 +43,5 @@ define (require, exports, module) ->
     #LoginView: LoginView
     BreadCrumbView: BreadCrumbView
     UserMenuView: UserMenuView
-      
+    MessageView: MessageView
+    

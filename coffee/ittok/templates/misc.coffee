@@ -40,8 +40,19 @@ define (require, exports, module) ->
       for item in doc.data.relationships.meta.breadcrumbs
         tc.li ->
           tc.a href:frontdoor_url(item.path), item.title
-          
+
+  message_box = tc.renderable (msg) ->
+    lvl = msg.level
+    if lvl == 'error'
+      lvl = 'danger'
+    tc.div ".alert-dismissable.alert.alert-#{lvl}", ->
+      tc.button '.close', type:'button', 'data-dismiss':'alert',
+      'aria-hidden': true, ->
+        tc.raw '&times;'
+      tc.text msg.content
+      
   ########################################
   module.exports =
     user_menu: user_menu
     breadcrumbs: breadcrumbs
+    message_box: message_box

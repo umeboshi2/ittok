@@ -21,7 +21,6 @@ define (require, exports, module) ->
 
   #https://github.com/goodeggs/teacup-camel-to-kebab
   camel_to_kebab = (str) ->
-    console.log str
     str.replace(/([A-Z])/g, ($1) -> "-#{$1.toLowerCase()}")
      
   navbar_set_active = (path) ->
@@ -44,6 +43,9 @@ define (require, exports, module) ->
   make_json_post = (url, data, type='POST') ->
     settings = make_json_post_settings url, data, type
     $.ajax settings
+
+  remove_trailing_slashes = (path) ->
+    path.replace /\/$/, ""
     
   module.exports =
     scroll_top_fast: scroll_top_fast
@@ -54,6 +56,7 @@ define (require, exports, module) ->
     navbar_set_active: navbar_set_active
     make_json_post_settings: make_json_post_settings
     make_json_post: make_json_post
+    remove_trailing_slashes: remove_trailing_slashes
     
 
 

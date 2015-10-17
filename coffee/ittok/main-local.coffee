@@ -37,7 +37,7 @@ require.config
     qs: "#{components}/qs/dist/qs"
     'bootstrap-fileinput': "#{components}/bootstrap-fileinput/js/fileinput.min"
     'json-editor': "#{components}/json-editor/dist/jsoneditor"
-
+    tablednd: "#{components}/TableDnD/js/jquery.tablednd"
     
 
     
@@ -64,6 +64,9 @@ require.config
     'json-editor':
       deps: ['jquery', 'bootstrap']
       exports: 'JSONEditor'
+    tablednd:
+      deps: ['jquery']
+      exports: 'tableDnD'
       
     #qs:
     #  exports: 'qs'
@@ -73,7 +76,7 @@ require.config
   callback: (require) ->
     'use strict'
     filename = location.pathname.match(/\/([^\/]*)$/)
-    console.log "Filename #{filename}", location.pathname
+    #console.log "Filename #{filename}", location.pathname
     modulename = undefined
     if filename and filename[1] isnt "" or filename[0] == '/'
       modulename = [

@@ -32,6 +32,7 @@ define (require, exports, module) ->
     sidebar: '#sidebar'
     breadcrumbs: '#breadcrumbs'
     content: '#main-content'
+    messages: '#messages'
     footer: '#footer'
     modal: '#modal'
     # this region is on navbar-view

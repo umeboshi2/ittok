@@ -18,6 +18,8 @@ define (require, exports, module) ->
       # edit/breadcrumbs.pt
       tc.div '#breadcrumbs'
       tc.div '.row', ->
+        tc.div 'col-md-12', ->
+          tc.div '#messages'
         tc.div '#main-content.col-md-9'
         tc.div '#right-slot.col-md-3.right-column'
     tc.div '#footer'

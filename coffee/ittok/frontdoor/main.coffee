@@ -22,9 +22,12 @@ define (require, exports, module) ->
       'frontdoor': 'frontdoor'
       'frontdoor/view': 'frontdoor'
       'frontdoor/view/*resource': 'view_resource'
+      # edit routes
+      'editor/contents': 'manage_root_contents'
+      'editor/contents/*resource': 'manage_contents'
       
   MainChannel.reqres.setHandler 'applet:frontdoor:route', () ->
-    console.log "frontdoor:route being handled"
+    #console.log "frontdoor:route being handled"
     controller = new Controller MainChannel
     controller.root_doc = MainChannel.reqres.request 'main:app:current-document'
     router = new Router

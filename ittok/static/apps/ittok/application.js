@@ -138,6 +138,7 @@
       };
     })(this));
     require('frontdoor/main');
+    require('editcontents/main');
     app = new Marionette.Application();
     window.App = app;
     here = location.pathname;

@@ -9,7 +9,7 @@
     Marionette = require('marionette');
     marked = require('marked');
     MainChannel = Backbone.Wreqr.radio.channel('global');
-    Views = require('frontdoor/views');
+    Views = require('editcontents/views');
     MainViews = require('views');
     Util = require('util');
     MainController = require('controllers').MainController;
@@ -20,21 +20,7 @@
         return Controller.__super__.constructor.apply(this, arguments);
       }
 
-      Controller.prototype.make_main_content = function() {
-        var view;
-        this._make_editbar();
-        this._make_breadcrumbs();
-        view = new Views.FrontDoorMainView({
-          model: this.root_doc
-        });
-        return this._show_content(view);
-      };
-
-      Controller.prototype._set_resource = function(resource) {
-        return this.root_doc.id = "/" + resource;
-      };
-
-      Controller.prototype._view_resource = function() {
+      Controller.prototype._manage_contents = function() {
         var response;
         response = this.root_doc.fetch();
         return response.done((function(_this) {
@@ -42,7 +28,7 @@
             var view;
             _this._make_editbar();
             _this._make_breadcrumbs();
-            view = new Views.FrontDoorMainView({
+            view = new Views.ContentsView({
               model: _this.root_doc
             });
             return _this._show_content(view);
@@ -50,18 +36,17 @@
         })(this));
       };
 
-      Controller.prototype.view_resource = function(resource) {
+      Controller.prototype.manage_contents = function(resource) {
+        if (resource === null) {
+          return this.manage_root_contents();
+        }
         this._set_resource(resource);
-        return this._view_resource();
+        return this._manage_contents();
       };
 
-      Controller.prototype.frontdoor = function() {
+      Controller.prototype.manage_root_contents = function() {
         this.root_doc.id = "";
-        return this._view_resource();
-      };
-
-      Controller.prototype.start = function() {
-        return this.make_main_content();
+        return this._manage_contents();
       };
 
       return Controller;

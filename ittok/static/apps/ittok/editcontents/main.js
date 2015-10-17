@@ -8,7 +8,7 @@
     Marionette = require('marionette');
     Wreqr = require('backbone.wreqr');
     Util = require('util');
-    Controller = require('frontdoor/controller');
+    Controller = require('editcontents/controller');
     MainChannel = Backbone.Wreqr.radio.channel('global');
     BootStrapAppRouter = (function(superClass) {
       extend(BootStrapAppRouter, superClass);
@@ -32,17 +32,16 @@
       }
 
       Router.prototype.appRoutes = {
-        '': 'start',
-        'frontdoor': 'frontdoor',
-        'frontdoor/view': 'frontdoor',
-        'frontdoor/view/*resource': 'view_resource'
+        'editor/contents': 'manage_root_contents',
+        'editor/contents/*resource': 'manage_contents'
       };
 
       return Router;
 
     })(BootStrapAppRouter);
-    return MainChannel.reqres.setHandler('applet:frontdoor:route', function() {
+    return MainChannel.reqres.setHandler('applet:editcontents:route', function() {
       var controller, router;
+      console.log("editcontents:route being handled");
       controller = new Controller(MainChannel);
       controller.root_doc = MainChannel.reqres.request('main:app:current-document');
       return router = new Router({

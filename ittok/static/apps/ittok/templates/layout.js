@@ -10,6 +10,9 @@
       tc.div('.container', function() {
         tc.div('#breadcrumbs');
         return tc.div('.row', function() {
+          tc.div('col-md-12', function() {
+            return tc.div('#messages');
+          });
           tc.div('#main-content.col-md-9');
           return tc.div('#right-slot.col-md-3.right-column');
         });

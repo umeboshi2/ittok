@@ -1,6 +1,6 @@
 (function() {
   define(function(require, exports, module) {
-    var $, _, breadcrumbs, dropdown_toggle, frontdoor_url, ref, tc, user_menu;
+    var $, _, breadcrumbs, dropdown_toggle, frontdoor_url, message_box, ref, tc, user_menu;
     $ = require('jquery');
     _ = require('underscore');
     tc = require('teacup');
@@ -59,9 +59,27 @@
         return results;
       });
     });
+    message_box = tc.renderable(function(msg) {
+      var lvl;
+      lvl = msg.level;
+      if (lvl === 'error') {
+        lvl = 'danger';
+      }
+      return tc.div(".alert-dismissable.alert.alert-" + lvl, function() {
+        tc.button('.close', {
+          type: 'button',
+          'data-dismiss': 'alert',
+          'aria-hidden': true
+        }, function() {
+          return tc.raw('&times;');
+        });
+        return tc.text(msg.content);
+      });
+    });
     return module.exports = {
       user_menu: user_menu,
-      breadcrumbs: breadcrumbs
+      breadcrumbs: breadcrumbs,
+      message_box: message_box
     };
   });
 

@@ -24,11 +24,14 @@
         var view;
         this._make_editbar();
         this._make_breadcrumbs();
-        console.log("Make_Main_Content");
         view = new Views.FrontDoorMainView({
           model: this.root_doc
         });
         return this._show_content(view);
+      };
+
+      Controller.prototype._set_resource = function(resource) {
+        return this.root_doc.id = "/" + resource;
       };
 
       Controller.prototype._view_resource = function() {
@@ -48,14 +51,42 @@
       };
 
       Controller.prototype.view_resource = function(resource) {
-        console.log("RESOURCE", resource);
-        this.root_doc.id = "/" + resource;
+        this._set_resource(resource);
         return this._view_resource();
       };
 
       Controller.prototype.frontdoor = function() {
         this.root_doc.id = "";
         return this._view_resource();
+      };
+
+      Controller.prototype._manage_contents = function() {
+        var response;
+        response = this.root_doc.fetch();
+        return response.done((function(_this) {
+          return function() {
+            var view;
+            _this._make_editbar();
+            _this._make_breadcrumbs();
+            view = new Views.ContentsView({
+              model: _this.root_doc
+            });
+            return _this._show_content(view);
+          };
+        })(this));
+      };
+
+      Controller.prototype.manage_contents = function(resource) {
+        if (resource === null) {
+          return this.manage_root_contents();
+        }
+        this._set_resource(resource);
+        return this._manage_contents();
+      };
+
+      Controller.prototype.manage_root_contents = function() {
+        this.root_doc.id = "";
+        return this._manage_contents();
       };
 
       Controller.prototype.start = function() {

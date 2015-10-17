@@ -43,6 +43,7 @@
       sidebar: '#sidebar',
       breadcrumbs: '#breadcrumbs',
       content: '#main-content',
+      messages: '#messages',
       footer: '#footer',
       modal: '#modal',
       usermenu: '#user-menu',

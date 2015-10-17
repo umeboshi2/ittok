@@ -1,6 +1,6 @@
 (function() {
   define(function(require, exports, module) {
-    var $, Backbone, _, camel_to_kebab, capitalize, handle_newlines, make_json_post, make_json_post_settings, navbar_set_active, navigate_to_url, scroll_top_fast;
+    var $, Backbone, _, camel_to_kebab, capitalize, handle_newlines, make_json_post, make_json_post_settings, navbar_set_active, navigate_to_url, remove_trailing_slashes, scroll_top_fast;
     $ = require('jquery');
     _ = require('underscore');
     Backbone = require('backbone');
@@ -27,7 +27,6 @@
       return str.replace(/(?:\r\n|\r|\n)/g, '<br />');
     };
     camel_to_kebab = function(str) {
-      console.log(str);
       return str.replace(/([A-Z])/g, function($1) {
         return "-" + ($1.toLowerCase());
       });
@@ -71,6 +70,9 @@
       settings = make_json_post_settings(url, data, type);
       return $.ajax(settings);
     };
+    remove_trailing_slashes = function(path) {
+      return path.replace(/\/$/, "");
+    };
     return module.exports = {
       scroll_top_fast: scroll_top_fast,
       navigate_to_url: navigate_to_url,
@@ -79,7 +81,8 @@
       camel_to_kebab: camel_to_kebab,
       navbar_set_active: navbar_set_active,
       make_json_post_settings: make_json_post_settings,
-      make_json_post: make_json_post
+      make_json_post: make_json_post,
+      remove_trailing_slashes: remove_trailing_slashes
     };
   });
 

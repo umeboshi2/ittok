@@ -3,7 +3,7 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var Backbone, BootstrapNavBarView, BreadCrumbView, EditBarView, EditorBarTemplates, LayoutTemplates, MainPageLayout, MainSearchFormView, Marionette, MiscTemplates, NavTemplates, UserMenuView;
+    var Backbone, BootstrapNavBarView, BreadCrumbView, EditBarView, EditorBarTemplates, LayoutTemplates, MainPageLayout, MainSearchFormView, Marionette, MessageView, MiscTemplates, NavTemplates, UserMenuView;
     Backbone = require('backbone');
     Marionette = require('marionette');
     NavTemplates = require('templates/navbar');
@@ -89,13 +89,26 @@
       return UserMenuView;
 
     })(Backbone.Marionette.ItemView);
+    MessageView = (function(superClass) {
+      extend(MessageView, superClass);
+
+      function MessageView() {
+        return MessageView.__super__.constructor.apply(this, arguments);
+      }
+
+      MessageView.prototype.template = MiscTemplates.message_box;
+
+      return MessageView;
+
+    })(Backbone.Marionette.ItemView);
     return module.exports = {
       MainPageLayout: MainPageLayout,
       MainSearchFormView: MainSearchFormView,
       EditBarView: EditBarView,
       BootstrapNavBarView: BootstrapNavBarView,
       BreadCrumbView: BreadCrumbView,
-      UserMenuView: UserMenuView
+      UserMenuView: UserMenuView,
+      MessageView: MessageView
     };
   });
 

@@ -1,10 +1,10 @@
 (function() {
   define(function(require, exports, module) {
-    var $, MainLayoutTemplate, _, actions_dropdown, add_dropdown, breadcrumbs, default_view_selector, dropdown_toggle, editor_bar_pt, editor_bar_pt_content, navbar_collapse_button, ref, tc, user_menu_dropdown, workflow_dropdown;
+    var $, MainLayoutTemplate, _, actions_dropdown, add_dropdown, breadcrumbs, default_view_selector, dropdown_toggle, editor_bar_pt, editor_bar_pt_content, editor_url, frontdoor_url, navbar_collapse_button, ref, tc, user_menu_dropdown, workflow_dropdown;
     $ = require('jquery');
     _ = require('underscore');
     tc = require('teacup');
-    ref = require('templates/common'), navbar_collapse_button = ref.navbar_collapse_button, dropdown_toggle = ref.dropdown_toggle;
+    ref = require('templates/common'), navbar_collapse_button = ref.navbar_collapse_button, dropdown_toggle = ref.dropdown_toggle, frontdoor_url = ref.frontdoor_url, editor_url = ref.editor_url;
     workflow_dropdown = tc.renderable(function(doc) {
       var ref1, relmeta, wf;
       relmeta = doc.data.relationships.meta;
@@ -172,8 +172,9 @@
       });
     });
     editor_bar_pt_content = tc.renderable(function(doc) {
-      var relmeta;
+      var relmeta, this_path;
       relmeta = doc.data.relationships.meta;
+      this_path = relmeta.paths.this_path;
       return tc.div('.container-fluid', function() {
         tc.div('.navbar-header', function() {
           return navbar_collapse_button('navbar-edit');
@@ -189,16 +190,20 @@
               isactive = '.active';
             }
             tc.li(function() {
+              var href;
+              href = frontdoor_url(this_path);
               return tc.a({
-                href: relmeta.api_url
+                href: href
               }, "View");
             });
             ref1 = relmeta.edit_links;
             for (i = 0, len = ref1.length; i < len; i++) {
               link = ref1[i];
               tc.li(function() {
+                var href;
+                href = editor_url(link.name, this_path);
                 return tc.a({
-                  href: link.url
+                  href: href
                 }, link.title);
               });
             }
@@ -264,6 +269,7 @@
       });
     });
     return module.exports = {
+      workflow_dropdown: workflow_dropdown,
       editor_bar_pt: editor_bar_pt
     };
   });

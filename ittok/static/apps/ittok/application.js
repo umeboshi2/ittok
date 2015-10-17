@@ -123,11 +123,24 @@
       search = MainChannel.reqres.request('main:app:get-region', 'search');
       return search.show(view);
     });
+    MainChannel.reqres.setHandler('main:app:display-message', (function(_this) {
+      return function(msg, lvl) {
+        var Message, messages, view;
+        messages = MainChannel.reqres.request('main:app:get-region', 'messages');
+        Message = new Backbone.Model({
+          content: msg,
+          level: lvl
+        });
+        view = new Views.MessageView({
+          model: Message
+        });
+        return messages.show(view);
+      };
+    })(this));
     require('frontdoor/main');
     app = new Marionette.Application();
     window.App = app;
     here = location.pathname;
-    console.log("Hhere we are", here);
     if (here === '/') {
       here = '';
     }

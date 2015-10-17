@@ -35,7 +35,9 @@
         '': 'start',
         'frontdoor': 'frontdoor',
         'frontdoor/view': 'frontdoor',
-        'frontdoor/view/*resource': 'view_resource'
+        'frontdoor/view/*resource': 'view_resource',
+        'editor/contents': 'manage_root_contents',
+        'editor/contents/*resource': 'manage_contents'
       };
 
       return Router;
@@ -43,7 +45,6 @@
     })(BootStrapAppRouter);
     return MainChannel.reqres.setHandler('applet:frontdoor:route', function() {
       var controller, router;
-      console.log("frontdoor:route being handled");
       controller = new Controller(MainChannel);
       controller.root_doc = MainChannel.reqres.request('main:app:current-document');
       return router = new Router({

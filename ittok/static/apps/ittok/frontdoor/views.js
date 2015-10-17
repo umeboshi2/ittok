@@ -3,10 +3,13 @@
     hasProp = {}.hasOwnProperty;
 
   define(function(require, exports, module) {
-    var Backbone, FDTemplates, FrontDoorMainView, Marionette;
+    var Backbone, ContentsView, EditorView, FDTemplates, FolderView, FrontDoorMainView, MainChannel, Marionette, make_json_post, ref, remove_trailing_slashes, tableDnD;
     Backbone = require('backbone');
     Marionette = require('marionette');
     FDTemplates = require('frontdoor/templates');
+    tableDnD = require('tablednd');
+    ref = require('util'), remove_trailing_slashes = ref.remove_trailing_slashes, make_json_post = ref.make_json_post;
+    MainChannel = Backbone.Wreqr.radio.channel('global');
     FrontDoorMainView = (function(superClass) {
       extend(FrontDoorMainView, superClass);
 
@@ -14,13 +17,144 @@
         return FrontDoorMainView.__super__.constructor.apply(this, arguments);
       }
 
-      FrontDoorMainView.prototype.template = FDTemplates.MainContentTemplate;
+      FrontDoorMainView.prototype.template = FDTemplates.DefaultViewTemplate;
 
       return FrontDoorMainView;
 
     })(Backbone.Marionette.ItemView);
+    FolderView = (function(superClass) {
+      extend(FolderView, superClass);
+
+      function FolderView() {
+        return FolderView.__super__.constructor.apply(this, arguments);
+      }
+
+      FolderView.prototype.template = FDTemplates.FolderViewTemplate;
+
+      return FolderView;
+
+    })(Backbone.Marionette.ItemView);
+    ContentsView = (function(superClass) {
+      extend(ContentsView, superClass);
+
+      function ContentsView() {
+        return ContentsView.__super__.constructor.apply(this, arguments);
+      }
+
+      ContentsView.prototype.template = FDTemplates.ContentsViewTemplate;
+
+      ContentsView.prototype.ui = {
+        toggle_all: '#toggle-all',
+        contents_table: '#contents-table',
+        contents_form: '#contents-form',
+        checkboxes: 'input[type=checkbox]',
+        child_checkboxes: 'input[type=checkbox][name="children"]',
+        thumbnails: '.document-view.content img.thumb',
+        action_buttons: '.action-button'
+      };
+
+      ContentsView.prototype.events = function() {
+        return {
+          'change @ui.toggle_all': 'toggle_all',
+          'click .action-button': 'handle_action_button'
+        };
+      };
+
+      ContentsView.prototype.toggle_all = function() {
+        return this.ui.checkboxes.prop('checked', this.ui.toggle_all[0].checked);
+      };
+
+      ContentsView.prototype.handle_action_button = function(event) {
+        var name;
+        window.ae = event;
+        name = event.currentTarget.getAttribute('name');
+        console.log("NAME", name);
+        window.checkboxes = this.ui.checkboxes;
+        console.log("Serialize", this.ui.contents_form.serialize());
+        return console.log("FIXME - implement action buttons");
+      };
+
+      ContentsView.prototype.onDomRefresh = function() {
+        this.ui.thumbnails.popover({
+          html: true,
+          trigger: 'hover'
+        });
+        return this.ui.contents_table.tableDnD({
+          onDrop: (function(_this) {
+            return function(table, row) {
+              var data, i, index, len, newPosition, oldPosition, postdata, relmeta, response, rows, this_path, url;
+              rows = table.tBodies[0].rows;
+              oldPosition = parseInt(row.id, 10);
+              newPosition = parseInt(row.id, 10);
+              index = 0;
+              for (i = 0, len = rows.length; i < len; i++) {
+                row = rows[i];
+                if (parseInt(row.id, 10) === oldPosition) {
+                  newPosition = index;
+                  break;
+                }
+                index += 1;
+              }
+              data = _this.model.get('data');
+              relmeta = data.relationships.meta;
+              this_path = remove_trailing_slashes(relmeta.paths.this_path);
+              url = this_path + "/@@move-child-position";
+              postdata = {
+                from: oldPosition,
+                to: newPosition
+              };
+              response = make_json_post(url, postdata);
+              response.done(function() {
+                var level, msg;
+                msg = "Moved from " + oldPosition + " to " + newPosition + " successfully!";
+                level = 'info';
+                return MainChannel.reqres.request('main:app:display-message', msg, level);
+              });
+              return response.fail(function() {
+                return alert("Bad move!");
+              });
+            };
+          })(this)
+        });
+      };
+
+      return ContentsView;
+
+    })(Backbone.Marionette.ItemView);
+    EditorView = (function(superClass) {
+      extend(EditorView, superClass);
+
+      function EditorView() {
+        return EditorView.__super__.constructor.apply(this, arguments);
+      }
+
+      EditorView.prototype.template = FDTemplates.ContentsViewTemplate;
+
+      EditorView.prototype.ui = {
+        toggle_all: '#toggle-all',
+        contents_table: '#contents-table',
+        contents_form: '#contents-form',
+        checkboxes: 'input[type=checkbox]',
+        child_checkboxes: 'input[type=checkbox][name="children"]',
+        thumbnails: '.document-view.content img.thumb',
+        action_buttons: '.action-button'
+      };
+
+      EditorView.prototype.events = function() {
+        return {
+          'change @ui.toggle_all': 'toggle_all',
+          'click .action-button': 'handle_action_button'
+        };
+      };
+
+      return EditorView;
+
+    })(Backbone.Marionette.ItemView);
     return module.exports = {
-      FrontDoorMainView: FrontDoorMainView
+      FrontDoorMainView: FrontDoorMainView,
+      FolderView: FolderView,
+      ContentsView: ContentsView,
+      EditorView: EditorView
     };
   });
 

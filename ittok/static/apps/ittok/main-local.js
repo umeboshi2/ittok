@@ -36,7 +36,8 @@
       validation: components + "/backbone.validation/dist/backbone-validation-amd",
       qs: components + "/qs/dist/qs",
       'bootstrap-fileinput': components + "/bootstrap-fileinput/js/fileinput.min",
-      'json-editor': components + "/json-editor/dist/jsoneditor"
+      'json-editor': components + "/json-editor/dist/jsoneditor",
+      tablednd: components + "/TableDnD/js/jquery.tablednd"
     },
     shim: {
       jquery: {
@@ -66,6 +67,10 @@
       'json-editor': {
         deps: ['jquery', 'bootstrap'],
         exports: 'JSONEditor'
+      },
+      tablednd: {
+        deps: ['jquery'],
+        exports: 'tableDnD'
       }
     },
     deps: ['require'],
@@ -73,7 +78,6 @@
       'use strict';
       var filename, modulename;
       filename = location.pathname.match(/\/([^\/]*)$/);
-      console.log("Filename " + filename, location.pathname);
       modulename = void 0;
       if (filename && filename[1] !== "" || filename[0] === '/') {
         modulename = ["application"].join("/");

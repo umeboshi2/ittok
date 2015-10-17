@@ -1,6 +1,6 @@
 (function() {
   define(function(require, exports, module) {
-    var $, _, dropdown_toggle, frontdoor_url, navbar_collapse_button, tc;
+    var $, _, dropdown_toggle, editor_url, frontdoor_url, navbar_collapse_button, tc;
     $ = require('jquery');
     _ = require('underscore');
     tc = require('teacup');
@@ -27,10 +27,17 @@
       stripped_path = path.replace(/\/$/, "");
       return "#frontdoor/view" + stripped_path;
     };
+    editor_url = function(action, path) {
+      var lstripped_path, rstripped_path;
+      rstripped_path = path.replace(/\/$/, "");
+      lstripped_path = rstripped_path.replace(/^\//, "");
+      return "#editor/" + action + "/" + lstripped_path;
+    };
     return module.exports = {
       navbar_collapse_button: navbar_collapse_button,
       dropdown_toggle: dropdown_toggle,
-      frontdoor_url: frontdoor_url
+      frontdoor_url: frontdoor_url,
+      editor_url: editor_url
     };
   });
 

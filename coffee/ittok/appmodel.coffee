@@ -48,9 +48,9 @@ define (require, exports, module) ->
     applets:
       [
         {
-          appname: 'useradmin'
-          name: 'Accounts'
-          url: '#useradmin'
+          appname: 'editcontents'
+          name: 'Edit Contents'
+          url: '#editor'
         }
       ]
     regions: appregions

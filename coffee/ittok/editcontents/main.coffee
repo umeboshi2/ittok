@@ -7,7 +7,7 @@ define (require, exports, module) ->
 
   Util = require 'util'
   
-  Controller = require 'frontdoor/controller'
+  Controller = require 'editcontents/controller'
 
   MainChannel = Backbone.Wreqr.radio.channel 'global'
   
@@ -18,13 +18,11 @@ define (require, exports, module) ->
 
   class Router extends BootStrapAppRouter
     appRoutes:
-      '': 'start'
-      'frontdoor': 'frontdoor'
-      'frontdoor/view': 'frontdoor'
-      'frontdoor/view/*resource': 'view_resource'
+      'editor/contents': 'manage_root_contents'
+      'editor/contents/*resource': 'manage_contents'
       
-  MainChannel.reqres.setHandler 'applet:frontdoor:route', () ->
-    #console.log "frontdoor:route being handled"
+  MainChannel.reqres.setHandler 'applet:editcontents:route', () ->
+    console.log "editcontents:route being handled"
     controller = new Controller MainChannel
     controller.root_doc = MainChannel.reqres.request 'main:app:current-document'
     router = new Router

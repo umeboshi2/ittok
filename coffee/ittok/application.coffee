@@ -148,6 +148,7 @@ define (require, exports, module) ->
   # require applets
   # 
   require 'frontdoor/main'
+  require 'editcontents/main'
 
 
   app = new Marionette.Application()

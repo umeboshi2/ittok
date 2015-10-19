@@ -33,6 +33,15 @@ gulp.task 'webpack:build-dev', ['compass'], (callback) ->
     return
   return
 
+gulp.task 'coffee', (callback) ->
+  # run webpack
+  devCompiler.run (err, stats) ->
+    throw new gutil.PluginError('webpack:build-dev', err) if err
+    gutil.log "[webpack:build-dev]", stats.toString(colors: true)
+    callback()
+    return
+  return
+  
 gulp.task 'default', ->
   gulp.start 'webpack:build-dev'
   

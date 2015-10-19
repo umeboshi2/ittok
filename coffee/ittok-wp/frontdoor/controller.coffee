@@ -3,15 +3,11 @@ Backbone = require 'backbone'
 Marionette = require 'marionette'
 marked = require 'marked'
 
+{ MainController } = require '../controllers'
+
 MainChannel = Backbone.Wreqr.radio.channel 'global'
 
-Views = require 'frontdoor/views'
-
-MainViews = require 'views'
-
-Util = require 'util'
-
-{ MainController } = require 'controllers'
+Views = require './views'
 
 class Controller extends MainController
   make_main_content: ->
@@ -49,5 +45,5 @@ class Controller extends MainController
     @make_main_content()
     #console.log 'frontdoor started'
 
-exports = Controller
+module.exports = Controller
 

@@ -3,15 +3,18 @@ Backbone = require 'backbone'
 Marionette = require 'marionette'
 marked = require 'marked'
 
+
+Util = require 'apputil'
+MainViews = require '../views'
+{ MainController } = require '../controllers'
+
+Views = require './views'
+
 MainChannel = Backbone.Wreqr.radio.channel 'global'
 
-Views = require 'editcontents/views'
 
-MainViews = require 'views'
 
-Util = require 'util'
 
-{ MainController } = require 'controllers'
 
 class Controller extends MainController
   _set_resource: (resource) ->
@@ -38,5 +41,5 @@ class Controller extends MainController
     @root_doc.id = ""
     @_manage_contents()
 
-exports = Controller
+module.exports = Controller
 

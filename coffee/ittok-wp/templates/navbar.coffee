@@ -4,7 +4,7 @@ tc = require 'teacup'
 
 { navbar_collapse_button
   dropdown_toggle
-  frontdoor_url } = require 'templates/common'
+  frontdoor_url } = require './common'
 
 
 # Main Templates must use teacup.
@@ -51,6 +51,6 @@ nav_pt = tc.renderable (doc) ->
     nav_pt_content doc
 
 ########################################
-exports =
+module.exports =
   nav_pt_search: nav_pt_search
   nav_pt: nav_pt

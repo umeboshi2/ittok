@@ -46,7 +46,7 @@ make_json_post = (url, data, type='POST') ->
 remove_trailing_slashes = (path) ->
   path.replace /\/$/, ""
 
-exports =
+module.exports =
   scroll_top_fast: scroll_top_fast
   navigate_to_url: navigate_to_url
   capitalize: capitalize

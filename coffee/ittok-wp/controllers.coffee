@@ -3,13 +3,10 @@ Backbone = require 'backbone'
 Marionette = require 'marionette'
 marked = require 'marked'
 
+MainViews = require './views'
+Util = require 'apputil'
+
 MainChannel = Backbone.Wreqr.radio.channel 'global'
-
-Views = require 'frontdoor/views'
-
-MainViews = require 'views'
-
-Util = require 'util'
 
 class BaseController extends Backbone.Marionette.Object
   init_page: () ->
@@ -30,7 +27,7 @@ class MainController extends BaseController
   _make_editbar: ->
     data = @root_doc.get 'data'
     user = data.relationships.meta.current_user
-    #console.log "_make_editbar", data
+    console.log "_make_editbar", data
     editbar = @_get_region 'editbar'
     # should have better way to check user?
     if user and 'title' of user
@@ -52,7 +49,7 @@ class MainController extends BaseController
     else
       bc.empty()
 
-exports =
+module.exports =
   BaseController: BaseController
   MainController: MainController
 

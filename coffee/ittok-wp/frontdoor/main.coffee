@@ -2,9 +2,9 @@ Backbone = require 'backbone'
 Marionette = require 'marionette'
 Wreqr = require 'backbone.wreqr'
 
-Util = require 'util'
+Util = require 'apputil'
 
-Controller = require 'frontdoor/controller'
+Controller = require './controller'
 
 MainChannel = Backbone.Wreqr.radio.channel 'global'
 

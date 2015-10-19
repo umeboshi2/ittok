@@ -1,12 +1,12 @@
 Backbone = require 'backbone'
 Marionette = require 'marionette'
 
-AppTemplates = require 'editcontents/templates'
+AppTemplates = require './templates'
 
 tableDnD = require 'tablednd'
 
 { remove_trailing_slashes
-  make_json_post } = require 'util'
+  make_json_post } = require 'apputil'
 
 MainChannel = Backbone.Wreqr.radio.channel 'global'
 
@@ -92,7 +92,7 @@ class EditorView extends Backbone.Marionette.ItemView
     'click .action-button': 'handle_action_button'
 
 
-exports =
+module.exports =
   ContentsView: ContentsView
   EditorView: EditorView
 

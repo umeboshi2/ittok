@@ -5,7 +5,7 @@ tc = require 'teacup'
 
 
 { dropdown_toggle
-  frontdoor_url } = require 'templates/common'
+  frontdoor_url } = require './common'
 
 # Main Templates must use teacup.
 # The template must be a teacup.renderable, 
@@ -51,7 +51,7 @@ message_box = tc.renderable (msg) ->
     tc.text msg.content
 
 ########################################
-exports =
+module.exports =
   user_menu: user_menu
   breadcrumbs: breadcrumbs
   message_box: message_box

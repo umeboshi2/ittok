@@ -6,7 +6,7 @@ tc = require 'teacup'
 { navbar_collapse_button
   dropdown_toggle
   frontdoor_url
-  editor_url } = require 'templates/common'
+  editor_url } = require './common'
 
 
 
@@ -21,7 +21,7 @@ workflow_dropdown = tc.renderable (doc) ->
   relmeta = doc.data.relationships.meta
   wf = relmeta.workflow
   tc.li '.dropdown', ->
-    if wf.current_state.current and relmeta.has_permission?.state_change
+    if wf.current_state?.current and relmeta.has_permission?.state_change
       dropdown_toggle ->
         tc.span ".state-#{wf.current_state.name}", ->
           tc.text wf.current_state.title
@@ -32,7 +32,7 @@ workflow_dropdown = tc.renderable (doc) ->
             tc.a href:"#workflow-change", ->
               tc.text "Make "
               tc.span wf.states[trans.to_state]['title']
-  if wf.current_state.current and not relmeta.has_permission?.state_change
+  if wf.current_state?.current and not relmeta.has_permission?.state_change
     tc.a ".state-#{wf.current_state.name}", ->
       tc.text wf.current_state.title
 
@@ -173,7 +173,7 @@ breadcrumbs = tc.renderable (doc) ->
         tc.a href:item.url, item.title
 
 ########################################
-exports =
+module.exports =
   workflow_dropdown: workflow_dropdown
   editor_bar_pt: editor_bar_pt
 

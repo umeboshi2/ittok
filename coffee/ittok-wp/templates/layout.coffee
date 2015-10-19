@@ -33,7 +33,7 @@ MainContentTemplate = tc.renderable (doc) ->
       tc.raw atts.body
 
 ########################################
-exports =
+module.exports =
   MainLayoutTemplate: MainLayoutTemplate
   MainContentTemplate: MainContentTemplate
 

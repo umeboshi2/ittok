@@ -34,7 +34,7 @@ editor_url = (action, path) ->
   "#editor/#{action}/#{lstripped_path}"
 
 ########################################
-exports =
+module.exports =
   navbar_collapse_button: navbar_collapse_button
   dropdown_toggle: dropdown_toggle
   frontdoor_url: frontdoor_url

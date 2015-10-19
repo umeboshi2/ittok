@@ -3,6 +3,7 @@ jQuery = require 'jquery'
 _ = require 'underscore'
 Backbone = require 'backbone'
 
+
 class BaseAppModel extends Backbone.Model
   defaults:
     brand:
@@ -54,4 +55,4 @@ appmodel = new BaseAppModel
     ]
   regions: appregions
 
-exports = appmodel
+module.exports = appmodel

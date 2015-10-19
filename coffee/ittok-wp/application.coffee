@@ -1,12 +1,14 @@
 Backbone = require 'backbone'
-Marionette = require 'marionette'
+Marionette = require 'backbone.marionette'
 #Wreqr = require 'backbone.wreqr'
 require 'bootstrap'
-require 'bootstrap-fileinput'
 
-Models = require 'models'
-Views = require 'views'
-AppModel = require 'appmodel'
+Models = require './models'
+Views = require './views'
+AppModel = require './appmodel'
+require 'bootstrap-fileinput-css'
+require 'bootstrap-fileinput-js'
+
 
 
 MainChannel = Backbone.Wreqr.radio.channel 'global'
@@ -149,6 +151,10 @@ MainChannel.reqres.setHandler 'main:app:display-message', (msg, lvl) =>
 require 'frontdoor/main'
 require 'editcontents/main'
 
+FormView = require 'marionette-form-view'
+window.formview = FormView
+
+
 
 app = new Marionette.Application()
 # DEBUG attach app to window
@@ -166,10 +172,11 @@ MainChannel.reqres.setHandler 'main:app:current-document', ->
 window.current_doc = current_doc
 response = current_doc.fetch()
 response.done ->
+  console.log "AppModel", AppModel
   prepare_app app, AppModel, current_doc
   app.start()
 
 
-exports = app
+module.exports = app
 
 

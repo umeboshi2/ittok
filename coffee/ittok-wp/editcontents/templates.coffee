@@ -4,9 +4,9 @@ marked = require 'marked'
 { navbar_collapse_button
   dropdown_toggle
   frontdoor_url
-  editor_url } = require 'templates/common'
+  editor_url } = require '../templates/common'
 
-{ workflow_dropdown } = require 'templates/editorbar'
+{ workflow_dropdown } = require '../templates/editorbar'
 
 # Main Templates must use teacup.
 # The template must be a teacup.renderable, 
@@ -119,7 +119,7 @@ ContentsViewTemplate = tc.renderable (doc) ->
 
 
 
-exports =
+module.exports =
   ContentsViewTemplate: ContentsViewTemplate
 
 

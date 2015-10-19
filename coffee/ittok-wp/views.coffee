@@ -2,10 +2,10 @@ Backbone = require 'backbone'
 Marionette = require 'marionette'
 
 
-NavTemplates = require 'templates/navbar'
-EditorBarTemplates = require 'templates/editorbar'
-LayoutTemplates = require 'templates/layout'
-MiscTemplates = require 'templates/misc'
+NavTemplates = require './templates/navbar'
+EditorBarTemplates = require './templates/editorbar'
+LayoutTemplates = require './templates/layout'
+MiscTemplates = require './templates/misc'
 
 
 class MainPageLayout extends Backbone.Marionette.LayoutView
@@ -34,12 +34,11 @@ class UserMenuView extends Backbone.Marionette.ItemView
 class MessageView extends Backbone.Marionette.ItemView
   template:MiscTemplates.message_box
 
-exports =
+module.exports =
   MainPageLayout: MainPageLayout
   MainSearchFormView: MainSearchFormView
   EditBarView: EditBarView
   BootstrapNavBarView: BootstrapNavBarView
-  #LoginView: LoginView
   BreadCrumbView: BreadCrumbView
   UserMenuView: UserMenuView
   MessageView: MessageView

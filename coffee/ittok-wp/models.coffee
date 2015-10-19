@@ -49,7 +49,7 @@ main_message_collection = new KottiMessages
 MainChannel.reqres.setHandler 'main:app:messages', ->
   main_message_collection
 
-exports =
+module.exports =
   KottiMessage: KottiMessage
   AppSettings: AppSettings
   KottiRootDocument: KottiRootDocument

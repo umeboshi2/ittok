@@ -15,6 +15,9 @@ define (require, exports, module) ->
   { MainController } = require 'controllers'
   
   class Controller extends MainController
+    _set_resource: (resource) ->
+      @root_doc.id = "/#{resource}"
+            
     _manage_contents: ->
       response = @root_doc.fetch()
       response.done =>

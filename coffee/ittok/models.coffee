@@ -11,7 +11,15 @@ define (require, exports, module) ->
   ########################################
   # Models
   ########################################
+  #
+  class KottiMessage extends Backbone.Model
+    defaults:
+      level: 'info'
+      
 
+  class KottiMessages extends Backbone.Collection
+    model: KottiMessage
+    
   class BaseKottiModel extends Backbone.Model
     url: ->
       "#{@id}/@@json"
@@ -37,8 +45,13 @@ define (require, exports, module) ->
   MainChannel.reqres.setHandler 'main:app:get-document', (path) ->
     new BaseKottiModel
       id: path
-      
+
+  main_message_collection = new KottiMessages
+  MainChannel.reqres.setHandler 'main:app:messages', ->
+    main_message_collection
+    
   module.exports =
+    KottiMessage: KottiMessage
     AppSettings: AppSettings
     KottiRootDocument: KottiRootDocument
     

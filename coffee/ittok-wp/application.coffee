@@ -151,8 +151,8 @@ MainChannel.reqres.setHandler 'main:app:display-message', (msg, lvl) =>
 require 'frontdoor/main'
 require 'editcontents/main'
 
-FormView = require 'marionette-form-view'
-window.formview = FormView
+#FormView = require 'marionette-form-view'
+#window.formview = FormView
 
 
 

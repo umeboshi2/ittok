@@ -10,17 +10,6 @@ tc = require 'teacup'
 ########################################
 # Templates
 ########################################
-navbar_collapse_button  = tc.renderable (target) ->
-  tc.button '.navbar-toggle', type:'button', 'data-toggle':'collapse',
-  'data-target': "##{target}", ->
-      tc.span '.sr-only', 'Toggle Navigation'
-      tc.span '.icon-bar'
-      tc.span '.icon-bar'
-      tc.span '.icon-bar'
-
-dropdown_toggle = tc.component (selector, attrs, renderContents) ->
-  tc.a "#{selector}.dropdown-toggle", href:attrs.href,
-  'data-toggle':'dropdown', renderContents
 
 frontdoor_url = (path) ->
   stripped_path = path.replace /\/$/, ""
@@ -35,8 +24,6 @@ editor_url = (action, path) ->
 
 ########################################
 module.exports =
-  navbar_collapse_button: navbar_collapse_button
-  dropdown_toggle: dropdown_toggle
   frontdoor_url: frontdoor_url
   editor_url: editor_url
 

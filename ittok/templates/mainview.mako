@@ -11,7 +11,7 @@
       kotti_context_url = '${request.resource_url(request.context)}'
     </script>
     <link rel="stylesheet" type="text/css" href="/static/font-awesome.css" />
-    <script data-main="/static/apps/ittok/main-local" src="/static/components/requirejs/require.js" type="text/javascript"></script>
+    <script src="/static/bundle.js" type="text/javascript"></script>
   </head>
   <body>
   </body>

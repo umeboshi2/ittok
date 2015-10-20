@@ -2,9 +2,12 @@ $ = require 'jquery'
 _ = require 'underscore'
 tc = require 'teacup'
 
+
 { navbar_collapse_button
-  dropdown_toggle
-  frontdoor_url } = require './common'
+  dropdown_toggle } = require 'bootstrap-teacup-templates/coffee/buttons'
+  
+  
+{ frontdoor_url } = require './common'
 
 
 # Main Templates must use teacup.
@@ -14,6 +17,7 @@ tc = require 'teacup'
 ########################################
 # Templates
 ########################################
+# FIXME -- no search form with action 
 nav_pt_search = tc.renderable (doc) ->
   relmeta = doc.data.relationships.meta
   tc.form '#form-search.navbar-form.navbar-right', role:'search',

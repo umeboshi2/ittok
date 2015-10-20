@@ -2,10 +2,10 @@ $ = require 'jquery'
 _ = require 'underscore'
 tc = require 'teacup'
 
-
 { navbar_collapse_button
-  dropdown_toggle
-  frontdoor_url
+  dropdown_toggle } = require 'bootstrap-teacup-templates/coffee/buttons'
+  
+{ frontdoor_url
   editor_url } = require './common'
 
 

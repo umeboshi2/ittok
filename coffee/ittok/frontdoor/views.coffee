@@ -1,23 +1,22 @@
-define (require, exports, module) ->
-  Backbone = require 'backbone'
-  Marionette = require 'marionette'
+Backbone = require 'backbone'
+Marionette = require 'marionette'
 
-  FDTemplates = require 'frontdoor/templates'
+FDTemplates = require './templates'
 
-  tableDnD = require 'tablednd'
+tableDnD = require 'tablednd'
 
-  { remove_trailing_slashes
-    make_json_post } = require 'util'
-  
-  MainChannel = Backbone.Wreqr.radio.channel 'global'
-  
-  class FrontDoorMainView extends Backbone.Marionette.ItemView
-    template: FDTemplates.DefaultViewTemplate
+{ remove_trailing_slashes
+  make_json_post } = require 'apputil'
 
-  class FolderView extends Backbone.Marionette.ItemView
-    template: FDTemplates.FolderViewTemplate
+MainChannel = Backbone.Wreqr.radio.channel 'global'
 
-  module.exports =
-    FrontDoorMainView: FrontDoorMainView
-    FolderView: FolderView
-    
+class FrontDoorMainView extends Backbone.Marionette.ItemView
+  template: FDTemplates.DefaultViewTemplate
+
+class FolderView extends Backbone.Marionette.ItemView
+  template: FDTemplates.FolderViewTemplate
+
+module.exports =
+  FrontDoorMainView: FrontDoorMainView
+  FolderView: FolderView
+

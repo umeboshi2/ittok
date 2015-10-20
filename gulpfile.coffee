@@ -49,3 +49,6 @@ gulp.task 'watch', ['compass', 'webpack:build-dev'], ->
   gulp.watch ['./sass/**/*.scss', 'config.rb'], ['compass', 'webpack:build-dev']
   gulp.watch ['./coffee/**/*.coffee'], ['webpack:build-dev']
   
+gulp.task 'watch:coffee', ['coffee'], ->
+  gulp.watch ['./coffee/**/*.coffee'], ['coffee']
+  

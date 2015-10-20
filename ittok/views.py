@@ -12,7 +12,7 @@ from .models import (
     )
 
 
-@view_config(route_name='home', renderer='templates/mainview-wp.mako')
+@view_config(route_name='home', renderer='templates/mainview.mako')
 def my_view(request):
     view_css.need()
     try:

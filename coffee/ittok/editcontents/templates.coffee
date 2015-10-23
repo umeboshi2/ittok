@@ -1,12 +1,19 @@
 tc = require 'teacup'
 marked = require 'marked'
 
+
 { navbar_collapse_button
-  dropdown_toggle
-  frontdoor_url
+  dropdown_toggle } = require 'bootstrap-teacup-templates/coffee/buttons'
+  
+
+{ frontdoor_url
   editor_url } = require '../templates/common'
 
 { workflow_dropdown } = require '../templates/editorbar'
+
+{ form_group_input_div } = require 'bootstrap-teacup-templates/coffee/forms'
+
+{ capitalize } = require 'apputil'
 
 # Main Templates must use teacup.
 # The template must be a teacup.renderable, 
@@ -80,7 +87,7 @@ ContentsViewTemplate = tc.renderable (doc) ->
                 tc.tr "##{child.position}", ->
                   tc.td ->
                     tc.input name:'children', type:'checkbox',
-                    value:child.data.id,
+                    value:child.data.attributes.oid,
                     title:child.data.attributes.title
                   tc.td ->
                     tc.a href:editor_url('contents', child.path), ->
@@ -115,11 +122,38 @@ ContentsViewTemplate = tc.renderable (doc) ->
                   tc.text btn.title
 
 
+_edit_form = tc.renderable (doc) ->
+  for field in ['title', 'description']
+    form_group_input_div
+      input_id: "input_#{field}"
+      label: capitalize field
+      input_attributes:
+        name: field
+        placeholder: field
+        value: doc.data.attributes[field]
+      value: doc.data.attributes.title
+        
+EditNodeForm = tc.renderable (doc) ->
+  _edit_form doc
+  tc.div '#document-body', ->
+    tc.raw doc.data.attributes.body
+  tc.input '.btn.btn-default', type:'submit', value:"Update #{doc.data.type}"
 
+AceEditNodeForm = tc.renderable (doc) ->
+  _edit_form doc
+  tc.div '#ace-editor', style:'position:relative;width:100%;height:40em;'
+  tc.input '.btn.btn-default', type:'submit', value:"Update #{doc.data.type}"
+
+#editor {
+#    position: relative;
+#    width: 100%;
+#    height: 40em;
+#}
 
 
 
 module.exports =
   ContentsViewTemplate: ContentsViewTemplate
-
+  EditNodeForm: EditNodeForm
+  AceEditNodeForm: AceEditNodeForm
 

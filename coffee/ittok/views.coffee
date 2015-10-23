@@ -1,5 +1,5 @@
 Backbone = require 'backbone'
-Marionette = require 'marionette'
+Marionette = require 'backbone.marionette'
 
 
 NavTemplates = require './templates/navbar'
@@ -7,6 +7,7 @@ EditorBarTemplates = require './templates/editorbar'
 LayoutTemplates = require './templates/layout'
 MiscTemplates = require './templates/misc'
 
+MainChannel = Backbone.Radio.channel 'global'
 
 class MainPageLayout extends Backbone.Marionette.LayoutView
   template: LayoutTemplates.MainLayoutTemplate
@@ -33,7 +34,21 @@ class UserMenuView extends Backbone.Marionette.ItemView
 
 class MessageView extends Backbone.Marionette.ItemView
   template:MiscTemplates.message_box
+  ui:
+    close_button: 'button.close'
 
+  events:
+    'click @ui.close_button': 'destroy_message'
+
+  destroy_message: ->
+    #console.log "Destroy message", @model.get("content")
+    MainChannel.request 'main:app:delete-message', @model
+    
+
+class MessagesView extends Backbone.Marionette.CollectionView
+  childView: MessageView
+  
+  
 module.exports =
   MainPageLayout: MainPageLayout
   MainSearchFormView: MainSearchFormView
@@ -41,5 +56,6 @@ module.exports =
   BootstrapNavBarView: BootstrapNavBarView
   BreadCrumbView: BreadCrumbView
   UserMenuView: UserMenuView
-  MessageView: MessageView
+  MessagesView: MessagesView
+  
 

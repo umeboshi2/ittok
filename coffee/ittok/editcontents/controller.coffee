@@ -1,6 +1,6 @@
 $ = require 'jquery'
 Backbone = require 'backbone'
-Marionette = require 'marionette'
+Marionette = require 'backbone.marionette'
 marked = require 'marked'
 
 
@@ -10,16 +10,32 @@ MainViews = require '../views'
 
 Views = require './views'
 
-MainChannel = Backbone.Wreqr.radio.channel 'global'
+MainChannel = Backbone.Radio.channel 'global'
 
 
 
+require.ensure [
+  "hallo/src/hallo"
+  "hallo/src/widgets/dropdownbutton"
+  "hallo/src/widgets/button"
+  "hallo/src/toolbar/contextual"
+  "hallo/src/plugins/halloformat"
+  "hallo/src/plugins/headings"
+  "hallo/src/plugins/justify"
+  "hallo/src/plugins/link"
+  "hallo/src/plugins/lists"
+  "hallo/src/plugins/reundo"
+  "hallo/src/plugins/image_insert_edit"
+  "hallo/src/plugins/image"
+  "hallo/src/plugins/image/current"
+  "hallo/src/plugins/block"
+  "hallo/src/plugins/blacklist"], (require) ->
+    EditView = Views.EditorView
+    return EditView
+    
 
 
 class Controller extends MainController
-  _set_resource: (resource) ->
-    @root_doc.id = "/#{resource}"
-
   _manage_contents: ->
     response = @root_doc.fetch()
     response.done =>
@@ -41,5 +57,37 @@ class Controller extends MainController
     @root_doc.id = ""
     @_manage_contents()
 
+  _edit_node: ->
+    response = @root_doc.fetch()
+    response.done =>
+      console.log "Root_Doc", @root_doc
+      @_make_editbar()
+      @_make_breadcrumbs()
+      view = new Views.EditorView
+        model: @root_doc
+      @_show_content view
+      window.eview = view
+      
+  edit_node: (resource) ->
+    console.log "EDIT RESOURCE", resource
+    @_set_resource resource
+    @_edit_node()
+
+  _ace_edit_node: ->
+    response = @root_doc.fetch()
+    response.done =>
+      console.log "Root_Doc", @root_doc
+      @_make_editbar()
+      @_make_breadcrumbs()
+      view = new Views.AceEditorView
+        model: @root_doc
+      @_show_content view
+      window.aceview = view
+      
+  ace_edit_node: (resource) ->
+    console.log "ACE EDIT RESOURCE", resource
+    @_set_resource resource
+    @_ace_edit_node()
+    
 module.exports = Controller
 

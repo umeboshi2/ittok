@@ -1,27 +1,27 @@
 Backbone = require 'backbone'
-Marionette = require 'marionette'
-Wreqr = require 'backbone.wreqr'
+Marionette = require 'backbone.marionette'
 
 Util = require 'apputil'
+BootStrapAppRouter = require 'bootstrap_router'
 
 Controller = require './controller'
 
-MainChannel = Backbone.Wreqr.radio.channel 'global'
+MainChannel = Backbone.Radio.channel 'global'
 
-class BootStrapAppRouter extends Backbone.Marionette.AppRouter
-  onRoute: (name, path, args) ->
-    #console.log "onRoute name: #{name}, path: #{path}, args: #{args}"
-    Util.navbar_set_active path
+
 
 class Router extends BootStrapAppRouter
   appRoutes:
     'editor/contents': 'manage_root_contents'
     'editor/contents/*resource': 'manage_contents'
-
-MainChannel.reqres.setHandler 'applet:editcontents:route', () ->
+    'editor/edit/*resource': 'edit_node'
+    'editor/aceedit': 'ace_edit_node'
+    'editor/aceedit/*resource': 'ace_edit_node'
+    
+MainChannel.reply 'applet:editcontents:route', () ->
   console.log "editcontents:route being handled"
   controller = new Controller MainChannel
-  controller.root_doc = MainChannel.reqres.request 'main:app:current-document'
+  controller.root_doc = MainChannel.request 'main:app:current-document'
   router = new Router
     controller: controller
 

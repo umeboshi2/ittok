@@ -1,11 +1,11 @@
 $ = require 'jquery'
 Backbone = require 'backbone'
-Marionette = require 'marionette'
+Marionette = require 'backbone.marionette'
 marked = require 'marked'
 
 { MainController } = require '../controllers'
 
-MainChannel = Backbone.Wreqr.radio.channel 'global'
+MainChannel = Backbone.Radio.channel 'global'
 
 Views = require './views'
 
@@ -17,9 +17,6 @@ class Controller extends MainController
     view = new Views.FrontDoorMainView
       model: @root_doc
     @_show_content view
-
-  _set_resource: (resource) ->
-    @root_doc.id = "/#{resource}"
 
   _view_resource: ->
     #console.log "Fetch from", @root_doc.url()

@@ -3,7 +3,11 @@ from pyramid.view import view_config
 
 from sqlalchemy.exc import DBAPIError
 
-from kotti.fanstatic import view_css
+from kotti.fanstatic import view_css, edit_css, jqueryui_bootstrap_theme
+
+from kotti.views.edit.content import DocumentEditForm, DocumentAddForm
+from kotti.views.edit.content import FileEditForm, FileAddForm
+from kotti.views.edit.content import ImageEditForm, ImageAddForm
 
 
 from .models import (
@@ -12,9 +16,17 @@ from .models import (
     )
 
 
+@view_config(name='formview', renderer='string')
+def form_view(context, request):
+    #return DocumentEditForm.render(context)
+    fview = DocumentEditForm(context, request)
+    import pdb ; pdb.set_trace()
+
 @view_config(route_name='home', renderer='templates/mainview.mako')
 def my_view(request):
     view_css.need()
+    edit_css.need()
+    jqueryui_bootstrap_theme.need()
     try:
         one = DBSession.query(MyModel).filter(MyModel.name == 'one').first()
     except DBAPIError:

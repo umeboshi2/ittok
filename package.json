@@ -39,14 +39,22 @@
   },
   "dependencies": {
     "backbone.marionette": "^2.4.3",
+    "backbone.radio": "^1.0.2",
     "backbone.validation": "^0.7.1",
     "bootstrap": "^3.3.5",
     "brace": "^0.5.1",
+    "browser-request": "^0.3.3",
+    "chunk-manifest-webpack-plugin": "0.0.1",
+    "contentblocks": "^0.1.7",
+    "hallo": "^1.0.2",
     "jquery": "^2.1.4",
     "jquery-ui": "^1.10.5",
+    "js-beautify": "^1.5.10",
     "marionette-form-view": "github:umeboshi2/marionette-form-view",
     "marked": "^0.3.5",
+    "rangy": "^1.3.0",
     "sizzle": "^2.2.1",
-    "teacup": "^2.0.0"
+    "teacup": "^2.0.0",
+    "vie": "^2.1.2"
   }
 }

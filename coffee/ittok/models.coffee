@@ -1,3 +1,4 @@
+#require 'backbone-jsonapi'
 $ = require 'jquery'
 _ = require 'underscore'
 Backbone = require 'backbone'
@@ -27,11 +28,12 @@ class BaseKottiModel extends Backbone.Model
 
   parse: (response, options) ->
     messages = response.data.relationships.meta.messages
+    response.oid = response.data.attributes.oid
     for label of messages
       for msg in messages[label]
         MessageChannel.request 'display-message', msg, label
-    window.kotti_response = response
-    window.kotti_options = options
+    #window.kotti_response = response
+    #window.kotti_options = options
     super response, options
 
 class AppSettings extends Backbone.Model
@@ -75,6 +77,7 @@ MessageChannel.reply 'delete-message', (model) =>
 
 
 module.exports =
+  BaseKottiModel: BaseKottiModel
   KottiMessage: KottiMessage
   AppSettings: AppSettings
   KottiRootDocument: KottiRootDocument

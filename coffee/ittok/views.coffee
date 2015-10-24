@@ -8,6 +8,7 @@ LayoutTemplates = require './templates/layout'
 MiscTemplates = require './templates/misc'
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
 
 class MainPageLayout extends Backbone.Marionette.LayoutView
   template: LayoutTemplates.MainLayoutTemplate
@@ -42,7 +43,7 @@ class MessageView extends Backbone.Marionette.ItemView
 
   destroy_message: ->
     #console.log "Destroy message", @model.get("content")
-    MainChannel.request 'main:app:delete-message', @model
+    MessageChannel.request 'delete-message', @model
     
 
 class MessagesView extends Backbone.Marionette.CollectionView

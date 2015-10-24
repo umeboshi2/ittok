@@ -13,6 +13,8 @@ require 'jquery-ui'
   make_json_post } = require 'apputil'
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
+ResourceChannel = Backbone.Radio.channel 'resources'
 
 class NotImplementedModalView extends Backbone.Marionette.ItemView
   template: AppTemplates.NotImplementedModal
@@ -33,29 +35,35 @@ class ConfirmDeleteView extends Backbone.Marionette.CompositeView
     'click @ui.confirm_button': 'delete_nodes'
 
   delete_nodes: =>
-    window.deleteme = @collection
-    console.log "Delete these nodes"
     for child in @collection.models
-      path = remove_trailing_slashes child.get 'path'
-      console.log "PATH", path
-      model = MainChannel.request 'main:app:get-document', path
+      meta = child.get 'meta'
+      path = remove_trailing_slashes meta.path
+      model = ResourceChannel.request 'get-document', path
       response = model.destroy()
       callme = (response, path) ->
         response.node_path = path
-        msg_signal = 'main:app:display-message'
+        msg_signal = 'display-message'
         response.done =>
-          MainChannel.request(
+          MessageChannel.request(
             msg_signal, "#{response.node_path} deleted.", "success")
         response.fail =>
-          MainChannel.request(
+          MessageChannel.request(
             msg_signal, "DELETING #{response.node_path} FAILED.", "error")
       callme(response, path)
-    #modal = MainChannel.request 'main:app:get-region', 'modal'
-    #modal.empty()
     @ui.cancel_button.click()
-        
-class ContentsView extends Backbone.Marionette.ItemView
+
+class ContentsChildView extends Backbone.Marionette.ItemView
+  tagName: 'tr'
+  template: AppTemplates.ContentsTableChildRow
+
+  onShow: ->
+    @$el.attr
+      id: "#{@model.get('meta').position}"
+      
+class ContentsView extends Backbone.Marionette.CompositeView
   template: AppTemplates.ContentsViewTemplate
+  childView: ContentsChildView
+  childViewContainer: '#resource-children'
   ui:
     toggle_all: '#toggle-all'
     contents_table: '#contents-table'
@@ -81,44 +89,33 @@ class ContentsView extends Backbone.Marionette.ItemView
 
   handle_delete_action: (selected_models) ->
     children = new Backbone.Collection selected_models
-    #model = new Backbone.Model selected_models
-    window.selected_children = children
     view = new ConfirmDeleteView
       collection: children
     @_show_modal view
     
   handle_action_button: (event) ->
-    #window.ae = event
     name = event.currentTarget.getAttribute 'name'
-    #console.log "NAME", name
     selected = @ui.contents_form.serializeArray()
     # FIXME paste should not need selected children
     if not selected.length
       msg = 'Select a child before pressing a button'
-      MainChannel.request 'main:app:display-message', msg, 'info'
+      MessageChannel.request 'display-message', msg, 'info'
       return
     selected_values = (parseInt c.value for c in selected)
-    #console.log "selected_values", selected_values
-    docdata = @model.get 'data'
-    relmeta = docdata.relationships.meta
-    children = docdata.relationships.meta.children
-    
     selected_models = []
-    for c in children
-      if c.data.attributes.oid in selected_values
-        selected_models.push c
-    #console.log "SELECTED_MODELS", selected_models
+    for id in selected_values
+      selected_models.push @collection.get id
+        
     if name in ['copy', 'cut', 'paste']
-      console.log "Clipboard operation #{name}"
       cb = MainChannel.request 'main:app:kotti-clipboard'
       if name in ['copy', 'cut']
         cb[name] selected_models
         msg = "#{name} performed on #{selected_models.length} models"
-        MainChannel.request 'main:app:display-message', msg, 'success'
+        MessageChannel.request 'display-message', msg, 'success'
       else
         console.log "Handle paste"
     else if name == 'delete_nodes'
-      console.log 'show modal delete dialog'
+      #console.log 'show modal delete dialog'
       @handle_delete_action selected_models
     else
       model = new Backbone.Model name:name
@@ -126,8 +123,6 @@ class ContentsView extends Backbone.Marionette.ItemView
         model: model
       @_show_modal view
       
-      
-        
   onDomRefresh: ->
     @ui.thumbnails.popover
       html: true
@@ -144,25 +139,23 @@ class ContentsView extends Backbone.Marionette.ItemView
             newPosition = index
             break
           index += 1
-        #console.log "oldPosition #{oldPosition}, newPosition #{newPosition}"
         data = @model.get 'data'
         relmeta = data.relationships.meta
         this_path = remove_trailing_slashes relmeta.paths.this_path
         url = "#{this_path}/@@move-child-position"
-        #console.log "url", url
         postdata =
           from: oldPosition
           to: newPosition
         response = make_json_post url, postdata
         response.done =>
-          #console.log "Success"
           msg = "Moved from #{oldPosition} to #{newPosition} successfully!"
           level = 'info'
-          MainChannel.request 'main:app:display-message', msg, level
+          MessageChannel.request 'display-message', msg, level
 
         response.fail =>
-          alert "Bad move!"
-
+          #alert "Bad move!"
+          MessageChannel.request 'display-message', "Bad Move!", 'danger'
+          
 
     
 module.exports = ContentsView

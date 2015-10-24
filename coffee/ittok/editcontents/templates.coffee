@@ -65,8 +65,51 @@ ConfirmDeleteTemplate = tc.renderable (children) ->
         tc.div "#cancel-delete-button.#{btnclass}",
         'data-dismiss': 'modal', "Cancel"
 
+ContentsTableHead = tc.renderable () ->
+  tc.thead ->
+    tc.tr ->
+      tc.th ->
+        tc.input '#toggle-all', type:'checkbox',
+        title:'Select / deselect all'
+      fields = ['Title', 'Type', 'State', 'Visibility',
+      'Creation Date', 'Modification Date']
+      tc.th field for field in fields
+
+ContentsTableChildRow = tc.renderable (child) ->
+  #window.currentchild = child
+  type_info = child.data.relationships.meta.type_info
+  #tc.tr "##{child.position}.child-row", ->
+  tc.td ->
+    tc.input name:'children', type:'checkbox',
+    value:child.data.attributes.oid,
+    title:child.data.attributes.title
+  tc.td ->
+    tc.a href:editor_url('contents', child.meta.path), ->
+      tc.text child.data.attributes.title
+    if type_info.name == 'Image'
+      imgtag = """<img src="#{type_info.image_span4_url}">"""
+      tc.br()
+      tc.img '.thumb', src:type_info.image_span1_url,
+      'data-content':imgtag,
+      title:child.data.attributes.title
+  tc.td type_info.title
+  tc.td ->
+    lstyle = 'list-style-type: none; padding: 0; margin: 0;'
+    tc.ul style:lstyle, ->
+      workflow_dropdown child
+  tc.td ->
+    if child.meta.in_navigation
+      tc.i '.fa.fa-eye'
+      tc.span 'Visible'
+    else
+      tc.i '.fa.fa-eye-slash'
+      tc.span 'Hidden'
+  tc.td child.meta.creation_date
+  tc.td child.meta.modification_date
+  
   
 ContentsViewTemplate = tc.renderable (doc) ->
+  #window.ContentsViewDoc = doc
   atts = doc.data.attributes
   relmeta = doc.data.relationships.meta
   lineage = relmeta.lineage.slice()
@@ -81,7 +124,6 @@ ContentsViewTemplate = tc.renderable (doc) ->
     tc.div '.body', ->
       tc.div '#contents-path', ->
         [first, ..., last] = lineage
-        #console.log "first and last", first, last
         for item in lineage
           tc.a '.btn.btn-default.btn-small', name:item.name,
           href:editor_url('contents', item.path), ->
@@ -97,51 +139,11 @@ ContentsViewTemplate = tc.renderable (doc) ->
       #tc.div ->
       tc.form '#contents-form', ->
         # table only needed if length children
-        if relmeta.children.length
+        if doc.data.links.children.length
           tclasses = "table.table-condensed.table-striped.table-hover"
           tc.table "#contents-table.#{tclasses}", ->
-            tc.thead ->
-              tc.tr ->
-                tc.th ->
-                  tc.input '#toggle-all', type:'checkbox',
-                  title:'Select / deselect all'
-                tc.th 'Title'
-                tc.th 'Type'
-                tc.th 'State'
-                tc.th 'Visibility'
-                tc.th 'Creation Date'
-                tc.th 'Modification Date'
-            tc.tbody ->
-              for child in relmeta.children
-                type_info = child.data.relationships.meta.type_info
-                tc.tr "##{child.position}", ->
-                  tc.td ->
-                    tc.input name:'children', type:'checkbox',
-                    value:child.data.attributes.oid,
-                    title:child.data.attributes.title
-                  tc.td ->
-                    tc.a href:editor_url('contents', child.path), ->
-                      tc.text child.data.attributes.title
-                    if type_info.name == 'Image'
-                      imgtag = """<img src="#{type_info.image_span4_url}">"""
-                      tc.br()
-                      tc.img '.thumb', src:type_info.image_span1_url,
-                      'data-content':imgtag,
-                      title:child.data.attributes.title
-                  tc.td type_info.title
-                  tc.td ->
-                    lstyle = 'list-style-type: none; padding: 0; margin: 0;'
-                    tc.ul style:lstyle, ->
-                      workflow_dropdown doc
-                  tc.td ->
-                    if child.meta.in_navigation
-                      tc.i '.fa.fa-eye'
-                      tc.span 'Visible'
-                    else
-                      tc.i '.fa.fa-eye-slash'
-                      tc.span 'Hidden'
-                  tc.td child.meta.creation_date
-                  tc.td child.meta.modification_date
+            ContentsTableHead()
+            tc.tbody '#resource-children'
           tc.div ".btn-group", ->
             #if clipboard.length
             #  tc.div ".action-button.btn.btn-default.btn-small",
@@ -192,6 +194,7 @@ module.exports =
   NotImplementedModal: NotImplementedModal
   SelectedChild: SelectedChild
   ConfirmDeleteTemplate: ConfirmDeleteTemplate
+  ContentsTableChildRow: ContentsTableChildRow
   ContentsViewTemplate: ContentsViewTemplate
   EditNodeForm: EditNodeForm
   AceEditNodeForm: AceEditNodeForm

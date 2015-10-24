@@ -12,9 +12,13 @@ require 'bootstrap-fileinput-css'
 require 'bootstrap-fileinput-js'
 
 #require 'vie'
+require 'frontdoor/main'
+require 'editcontents/main'
 
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
+ResourceChannel = Backbone.Radio.channel 'resources'
 
 Backbone.Radio.DEBUG = true
 
@@ -60,7 +64,7 @@ initialize_page = (app, root_doc) ->
     navbar_region = regions.get 'navbar'
     navbar_region.show navbar
     messages = new Views.MessagesView
-      collection: MainChannel.request 'main:app:messages'
+      collection: MessageChannel.request 'messages'
     messages_region = regions.get 'messages'
     messages_region.show messages
     
@@ -125,31 +129,11 @@ MainChannel.reply 'mainpage:init', (appmodel, root_doc) =>
   # emit the main view is ready
   MainChannel.trigger 'mainpage:displayed'
 
-#MainChannel.on 'appregion:navbar:displayed', ->
-#  doc = MainChannel.request 'main:app:current-document'
-#
-#  #view = new Views.UserMenuView
-#  #  model: doc
-#  #  
-#  #usermenu = MainChannel.request 'main:app:get-region', 'usermenu'
-#  #usermenu.show view
-
 MainChannel.on 'appregion:navbar:displayed', ->
   view = new Views.MainSearchFormView
-    model: MainChannel.request 'main:app:current-document'
+    model: ResourceChannel.request 'current-document'
   search = MainChannel.request 'main:app:get-region', 'search'
   search.show view
-
-#root_document = new KottiRootDocument
-#  root_document
-
-# require applets
-# 
-require 'frontdoor/main'
-require 'editcontents/main'
-
-#FormView = require 'marionette-form-view'
-#window.formview = FormView
 
 
 
@@ -157,13 +141,12 @@ app = new Marionette.Application()
 # DEBUG attach app to window
 window.App = app
 
-#root_doc = MainChannel.request 'main:app:root-document'
 here = location.pathname
 #console.log "Here we are", here
 if here == '/'
   here = ''
-current_doc = MainChannel.request 'main:app:get-document', here
-MainChannel.reply 'main:app:current-document', ->
+current_doc = ResourceChannel.request 'get-document', here
+ResourceChannel.reply 'current-document', ->
   current_doc
 # DEBUG  
 window.current_doc = current_doc

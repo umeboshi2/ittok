@@ -5,6 +5,8 @@ Marionette = require 'backbone.marionette'
 
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
+ResourceChannel = Backbone.Radio.channel 'resources'
 
 
 ########################################
@@ -27,7 +29,7 @@ class BaseKottiModel extends Backbone.Model
     messages = response.data.relationships.meta.messages
     for label of messages
       for msg in messages[label]
-        MainChannel.request 'main:app:display-message', msg, label
+        MessageChannel.request 'display-message', msg, label
     window.kotti_response = response
     window.kotti_options = options
     super response, options
@@ -50,33 +52,25 @@ MainChannel.reply 'main:app:settings', ->
 #MainChannel.reply 'main:app:root-document', ->
 #  root_document
 
-MainChannel.reply 'main:app:get-document', (path) ->
+ResourceChannel.reply 'get-document', (path) ->
   new BaseKottiModel
     id: path
 
 main_message_collection = new KottiMessages
-MainChannel.reply 'main:app:messages', ->
+MessageChannel.reply 'messages', ->
   main_message_collection
 
-MainChannel.reply 'main:app:display-message', (msg, lvl) =>
-  messages = MainChannel.request 'main:app:messages'
+MessageChannel.reply 'display-message', (msg, lvl) =>
   Message = new Backbone.Model
     content: msg
     level: lvl
-  window.messages = messages
-  messages.add Message
+  main_message_collection.add Message
 
-MainChannel.reply 'main:app:display-message', (msg, lvl) =>
-  messages = MainChannel.request 'main:app:messages'
-  Message = new Backbone.Model
-    content: msg
-    level: lvl
-  window.messages = messages
-  messages.add Message
 
-MainChannel.reply 'main:app:delete-message', (model) =>
-  messages = MainChannel.request 'main:app:messages'
+MessageChannel.reply 'delete-message', (model) =>
+  messages = MessageChannel.request 'messages'
   messages.remove model
+
 
 
 

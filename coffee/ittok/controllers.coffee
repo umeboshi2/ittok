@@ -7,6 +7,8 @@ MainViews = require './views'
 Util = require 'apputil'
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
+ResourceChannel = Backbone.Radio.channel 'resources'
 
 class BaseController extends Backbone.Marionette.Object
   init_page: () ->
@@ -29,7 +31,7 @@ class MainController extends BaseController
       id = ""
     else
       id = "/#{resource}"
-    @root_doc = MainChannel.request 'main:app:get-document', id
+    @root_doc = ResourceChannel.request 'get-document', id
     #@root_doc.id = id
 
   _make_editbar: ->

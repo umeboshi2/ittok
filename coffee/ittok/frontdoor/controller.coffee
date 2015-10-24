@@ -6,6 +6,8 @@ marked = require 'marked'
 { MainController } = require '../controllers'
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
+ResourceChannel = Backbone.Radio.channel 'resources'
 
 Views = require './views'
 

@@ -8,6 +8,8 @@ Controller = require './controller'
 
 
 MainChannel = Backbone.Radio.channel 'global'
+MessageChannel = Backbone.Radio.channel 'messages'
+ResourceChannel = Backbone.Radio.channel 'resources'
 
 
 class Router extends BootStrapAppRouter
@@ -20,7 +22,7 @@ class Router extends BootStrapAppRouter
 MainChannel.reply 'applet:frontdoor:route', () ->
   #console.log "frontdoor:route being handled"
   controller = new Controller MainChannel
-  controller.root_doc = MainChannel.request 'main:app:current-document'
+  controller.root_doc = ResourceChannel.request 'current-document'
   router = new Router
     controller: controller
 

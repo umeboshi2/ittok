@@ -36,6 +36,10 @@ MainChannel.reply 'main:app:kotti-clipboard', ->
   kotti_clipboard
   
 
+class KottiContents extends Backbone.Collection
+
+
+  
 module.exports = KottiClipboard
 
 

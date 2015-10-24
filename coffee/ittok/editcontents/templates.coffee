@@ -12,12 +12,11 @@ marked = require 'marked'
 { workflow_dropdown } = require '../templates/editorbar'
 
 { form_group_input_div } = require 'bootstrap-teacup-templates/coffee/forms'
+{ ace_editor_div } = require 'bootstrap-teacup-templates/coffee/misc'
 
 { capitalize } = require 'apputil'
 
-# Main Templates must use teacup.
-# The template must be a teacup.renderable, 
-# and accept a layout model as an argument.
+MainChannel = Backbone.Radio.channel 'global'
 
 ########################################
 # Templates
@@ -37,11 +36,42 @@ button_icons =
 popover_image = tc.renderable (url) ->
   tc.img src:url
 
+NotImplementedModal = tc.renderable (model) ->
+  tc.div '.modal-dialog', ->
+    tc.div '.modal-content', ->
+      tc.h3 "#{model.name} is not implemented"
+      tc.div '.modal-body', ->
+        tc.div '#selected-children'
+      tc.div '.modal-footer', ->
+        btnclass = 'btn.btn-default.btn-sm'
+        tc.div "#cancel-delete-button.#{btnclass}",
+        'data-dismiss': 'modal', "Ok"
+  
+
+SelectedChild = tc.renderable (child) ->
+  tc.div child.data.id
+  
+  
+
+ConfirmDeleteTemplate = tc.renderable (children) ->
+  tc.div '.modal-dialog', ->
+    tc.div '.modal-content', ->
+      tc.h3 'Delete these children?'
+      tc.div '.modal-body', ->
+        tc.div '#selected-children'
+      tc.div '.modal-footer', ->
+        btnclass = 'btn.btn-default.btn-sm'
+        tc.div "#confirm-delete-button.#{btnclass}", "Confirm Delete"
+        tc.div "#cancel-delete-button.#{btnclass}",
+        'data-dismiss': 'modal', "Cancel"
+
+  
 ContentsViewTemplate = tc.renderable (doc) ->
   atts = doc.data.attributes
   relmeta = doc.data.relationships.meta
   lineage = relmeta.lineage.slice()
   lineage.reverse()
+  clipboard = MainChannel.request 'main:app:kotti-clipboard'
   tc.div '.document-view.content', ->
     tc.h1 atts.title
     tc.p '.lead', atts.description
@@ -113,6 +143,12 @@ ContentsViewTemplate = tc.renderable (doc) ->
                   tc.td child.meta.creation_date
                   tc.td child.meta.modification_date
           tc.div ".btn-group", ->
+            #if clipboard.length
+            #  tc.div ".action-button.btn.btn-default.btn-small",
+            #  name:'paste', ->
+            #    tc.i ".fa.#{button_icons.paste}.fa-fw"
+            #    tc.small ->
+            #      tc.text 'Paste'
             for btn in relmeta.contents_buttons
               tc.div ".action-button.#{btn.css_classes.join('.')}.btn-sm",
               #name:btn.name, type:'submit', ->
@@ -141,7 +177,7 @@ EditNodeForm = tc.renderable (doc) ->
 
 AceEditNodeForm = tc.renderable (doc) ->
   _edit_form doc
-  tc.div '#ace-editor', style:'position:relative;width:100%;height:40em;'
+  ace_editor_div()
   tc.input '.btn.btn-default', type:'submit', value:"Update #{doc.data.type}"
 
 #editor {
@@ -153,6 +189,9 @@ AceEditNodeForm = tc.renderable (doc) ->
 
 
 module.exports =
+  NotImplementedModal: NotImplementedModal
+  SelectedChild: SelectedChild
+  ConfirmDeleteTemplate: ConfirmDeleteTemplate
   ContentsViewTemplate: ContentsViewTemplate
   EditNodeForm: EditNodeForm
   AceEditNodeForm: AceEditNodeForm

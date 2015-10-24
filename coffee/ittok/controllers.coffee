@@ -37,7 +37,7 @@ class MainController extends BaseController
   _make_editbar: ->
     data = @root_doc.get 'data'
     user = data.relationships.meta.current_user
-    console.log "_make_editbar", data
+    #console.log "_make_editbar", data
     editbar = @_get_region 'editbar'
     # should have better way to check user?
     if user and 'title' of user

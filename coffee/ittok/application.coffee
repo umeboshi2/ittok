@@ -152,7 +152,7 @@ ResourceChannel.reply 'current-document', ->
 window.current_doc = current_doc
 response = current_doc.fetch()
 response.done ->
-  console.log "AppModel", AppModel
+  #console.log "AppModel", AppModel
   prepare_app app, AppModel, current_doc
   app.start()
 

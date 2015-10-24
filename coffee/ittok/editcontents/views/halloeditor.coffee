@@ -53,7 +53,7 @@ class EditorView extends KottiResourceFormView
     description: 'input[name="description"]'
   
   createModel: ->
-    console.log "Model url", @model.url()
+    #console.log "Model url", @model.url()
     @model
 
   onDomRefresh: ->
@@ -74,7 +74,7 @@ class EditorView extends KottiResourceFormView
         
 
   updateModel: ->
-    console.log "Model", @model
+    #console.log "Model", @model
     data = @model.get 'data'
     atts = data.attributes
     for a in ['title', 'description']
@@ -83,7 +83,7 @@ class EditorView extends KottiResourceFormView
     # FIXME!!!!
     atts.tags = []
     @model.set "data", data
-    console.log "model updated", @model, @model.url()
+    #console.log "model updated", @model, @model.url()
     
     
     

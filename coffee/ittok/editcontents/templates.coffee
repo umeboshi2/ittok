@@ -47,7 +47,16 @@ NotImplementedModal = tc.renderable (model) ->
         tc.div "#cancel-delete-button.#{btnclass}",
         'data-dismiss': 'modal', "Ok"
   
-
+SelectChildFirstModal = tc.renderable () ->
+  tc.div '.modal-dialog', ->
+    tc.div '.modal-content', ->
+      tc.h3 "Please select one or more children first."
+      tc.div '.modal-body'
+      tc.div '.modal-footer', ->
+        btnclass = 'btn.btn-default.btn-sm'
+        tc.div "#cancel-delete-button.#{btnclass}",
+        'data-dismiss': 'modal', "Ok"
+  
 SelectedChild = tc.renderable (child) ->
   tc.div child.data.id
   
@@ -192,6 +201,7 @@ AceEditNodeForm = tc.renderable (doc) ->
 
 module.exports =
   NotImplementedModal: NotImplementedModal
+  SelectChildFirstModal: SelectChildFirstModal
   SelectedChild: SelectedChild
   ConfirmDeleteTemplate: ConfirmDeleteTemplate
   ContentsTableChildRow: ContentsTableChildRow

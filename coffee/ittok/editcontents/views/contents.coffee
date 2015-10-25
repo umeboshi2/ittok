@@ -18,6 +18,9 @@ ResourceChannel = Backbone.Radio.channel 'resources'
 
 class NotImplementedModalView extends Backbone.Marionette.ItemView
   template: AppTemplates.NotImplementedModal
+
+class SelectChildFirstModalView extends Backbone.Marionette.ItemView
+  template: AppTemplates.SelectChildFirstModal
   
 class SelectedChildView extends Backbone.Marionette.ItemView
   template: AppTemplates.SelectedChild
@@ -55,10 +58,18 @@ class ConfirmDeleteView extends Backbone.Marionette.CompositeView
 class ContentsChildView extends Backbone.Marionette.ItemView
   tagName: 'tr'
   template: AppTemplates.ContentsTableChildRow
+  ui:
+    checkbox: 'input[type=checkbox][name="children"]'
+    thumbnail: '.thumb'
 
   onShow: ->
     @$el.attr
       id: "#{@model.get('meta').position}"
+      
+  onDomRefresh: ->
+    @ui.thumbnail.popover
+      html: true
+      trigger: 'hover'
       
 class ContentsView extends Backbone.Marionette.CompositeView
   template: AppTemplates.ContentsViewTemplate
@@ -92,15 +103,33 @@ class ContentsView extends Backbone.Marionette.CompositeView
     view = new ConfirmDeleteView
       collection: children
     @_show_modal view
+
+  handle_up_down: (direction, selected_models) ->
+    console.log "handle_up_down", selected_models
+    path = @model.get('meta').path
+    console.log path
+    url = "#{path}@@#{direction}-json"
+    children = []
+    for m in selected_models
+      children.push m.id
+    data =
+      children: children
+    response = make_json_post url, data
+    response.done =>
+      console.log "response", response
+
     
   handle_action_button: (event) ->
     name = event.currentTarget.getAttribute 'name'
     selected = @ui.contents_form.serializeArray()
     # FIXME paste should not need selected children
     if not selected.length
-      msg = 'Select a child before pressing a button'
-      MessageChannel.request 'display-message', msg, 'info'
+      view = new SelectChildFirstModalView
+      @_show_modal view
       return
+      #msg = 'Select a child before pressing a button'
+      #MessageChannel.request 'display-message', msg, 'info'
+      #return
     selected_values = (parseInt c.value for c in selected)
     selected_models = []
     for id in selected_values
@@ -117,6 +146,8 @@ class ContentsView extends Backbone.Marionette.CompositeView
     else if name == 'delete_nodes'
       #console.log 'show modal delete dialog'
       @handle_delete_action selected_models
+    else if name in ['up', 'down']
+      @handle_up_down name, selected_models
     else
       model = new Backbone.Model name:name
       view = new NotImplementedModalView
